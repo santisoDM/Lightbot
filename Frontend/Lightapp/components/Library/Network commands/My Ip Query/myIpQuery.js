@@ -1,8 +1,13 @@
 // queryMyIP.js
-import validateQueryMyIP from './validateQueryMyIP';
+import { enviarComando } from '../../sendData';
+import validateQueryMyIP from './MyIpQueryValidator';
 
 const queryMyIP = (serialNumber) => {
-  validateQueryMyIP(serialNumber);
+  if (!validateQueryMyIP(serialNumber)) {
+    throw new Error('Invalid parameters for queryMyIP');
+  } 
+  paquete = `${serialNumber},MYIP?,\r\n`
+  enviarComando(paquete)
   return `${serialNumber},MYIP?,\\r\\n`;
 };
 
