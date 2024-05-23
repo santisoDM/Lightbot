@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon -L",
     "test": "jest"
   },
   "keywords": [],
@@ -12,8 +13,10 @@
   "dependencies": {
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "dgram": "^1.0.1",
     "express": "^4.19.2",
     "morgan": "^1.10.0",
+    "nodemon": "^3.1.0",
     "react-native-ble-plx": "^3.1.2",
     "react-navigation": "^5.0.0"
   },
