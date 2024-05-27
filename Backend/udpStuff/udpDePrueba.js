@@ -3,7 +3,7 @@ const dgram = require("dgram");
 const HOST = "186.124.22.22";
 const PORT = 6060;
 
-const prueba = () => {
+const prueba = async(command) => {
   return new Promise((resolve, reject) => {
     const socket = dgram.createSocket("udp4");
 
@@ -20,7 +20,7 @@ const prueba = () => {
     });
 
     socket.send(
-      Buffer.from("3056105,INCDEC,1,25,0,1,25,0,1,25,0,\r\n"),
+      Buffer.from(command),
       PORT,
       HOST,
       (error) => {
