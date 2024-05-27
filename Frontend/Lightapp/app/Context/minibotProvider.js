@@ -2,9 +2,9 @@
 import React, { useState } from 'react';
 import MyContext from './MyContext';
 
-const MyProvider = ({ children }) => {
+const MinibotProvider = ({ children }) => {
   const [state, setState] = useState({ 
-    serialNumber: 
+    serialNumber: '3056105880'
    });
 
   return (
@@ -14,4 +14,4 @@ const MyProvider = ({ children }) => {
   );
 };
 
-export default MyProvider;
+export default MinibotProvider;

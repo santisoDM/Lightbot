@@ -1,7 +1,29 @@
 import React from 'react';
 import { View, Button, StyleSheet, ScrollView } from 'react-native';
+// Imports Network Commands
+import querySSID from '../Library/Network commands/SSID Query/SSIDQuery';
+import turnBluetoothOff from '../Library/Network commands/Bluetooth Off/BluetoothOff'
+import turnBluetoothOn from '../Library/Network commands/Bluetooth On/BluetoothOn'
+import queryMyIP from '../Library/Network commands/My Ip Query/myIpQuery'
+import configurePassword from '../Library/Network commands/Password Config/passwordConfig'
+import queryPassword from '../Library/Network commands/Password Query/passwordQuery'
+import resetWifi from '../Library/Network commands/Reset Wifi/ResetWifi'
+import configureSSID from '../Library/Network commands/SSID Config/configureSSID'
+import incrementDecrementPositions from '../Library/Scene and positions commands/Increment-Decrement Positions/incrementDecrementPositions'
+import loadPage from '../Library/Scene and positions commands/Load Page/loadPage'
+import savePage from '../Library/Scene and positions commands/Save Page/savePage'
+import saveScene from '../Library/Scene and positions commands/Save Scene/saveScene'
+import loadScene from '../Library/Scene and positions commands/Load Scene/loadScene'
+import stopScene from '../Library/Scene and positions commands/Stop Scene/stopScene'
+import setSpeed from '../Library/Scene and positions commands/Set Speed/setSpeed'
+import setDelay from '../Library/Scene and positions commands/Set Delay/setDelay'
+import runPositions from '../Library/Scene and positions commands/Run Positions/runPositions'
 
-const TestComponent = () => {
+
+
+const TestComponent = ({state}) => {
+    let serialNumber = state.serialNumber
+    console.log(serialNumber)
   const commands = [
     { label: 'SSID', command: 'SSID' },
     { label: 'PASS', command: 'PASS' },
@@ -12,7 +34,7 @@ const TestComponent = () => {
     { label: 'RESETWIFI', command: 'RESETWIFI' },
     { label: 'MYIP', command: 'MYIP' },
     { label: 'RUNPOS', command: 'RUNPOS' },
-    { label: 'INCDECPOS', command: 'INCDECPOS' },
+    { label: 'INCDECPOS', command: 'INCDEC' },
     { label: 'SAVEPAGE', command: 'SAVEPAGE' },
     { label: 'LOADPAGE', command: 'LOADPAGE' },
     { label: 'SAVESCENE', command: 'SAVESCENE' },
@@ -22,8 +44,64 @@ const TestComponent = () => {
     { label: 'SETDELAY', command: 'SETDELAY' },
   ];
 
-  const handlePress = (command) => {
-    // Aquí iría la lógica para manejar el comando
+  const handlePress = (command) => { 
+        switch (command) {
+            case 'SSID':
+              configureSSID(serialNumber, ssid="Nombre de la red")
+                break;
+            case 'PASS':
+                configurePassword(serialNumber, '123456')
+                break;
+            case 'SSID?':
+                querySSID(serialNumber)
+                break;
+            case 'PASS?':
+                queryPassword(serialNumber)
+                break;
+            case 'BLEON':
+                turnBluetoothOn(serialNumber)
+                break;
+            case 'BLEOFF':
+                turnBluetoothOff(serialNumber)
+                break;
+            case 'RESETWIFI':
+              resetWifi(serialNumber)
+                break;
+            case 'MYIP':
+            queryMyIP(serialNumber)
+                break;
+            case 'RUNPOS':
+                runPositions(serialNumber, '1800', '1', '900', '1', '2', '1000', '10', '0,0');
+                break;
+                case 'INCDEC':
+                    incrementDecrementPositions(serialNumber, '1', 30, 5, '1', 20, 10, '0', 50, 8);
+                    break;
+            case 'SAVEPAGE':
+                // Lógica para el comando SAVEPAGE
+                break;
+            case 'LOADPAGE':
+                // Lógica para el comando LOADPAGE
+                break;
+            case 'SAVESCENE':
+                // Lógica para el comando SAVESCENE
+                break;
+            case 'LOADSCENE':
+                // Lógica para el comando LOADSCENE
+                break;
+            case 'STOPSCENE':
+                // Lógica para el comando STOPSCENE
+                break;
+            case 'SETSPEED':
+                // Lógica para el comando SETSPEED
+                break;
+            case 'SETDELAY':
+                // Lógica para el comando SETDELAY
+                break;
+            default:
+                console.log('Comando no reconocido');
+        
+    }
+        
     console.log(`Command pressed: ${command}`);
   };
 

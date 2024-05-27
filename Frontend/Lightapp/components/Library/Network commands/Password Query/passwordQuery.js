@@ -8,7 +8,8 @@ let paquete;
     throw new Error('Invalid serialNumber');
   }
   paquete = `${serialNumber},PASS?,\r\n`
-  enviarComando(paquete)
+   // enviarComando(paquete)
+   console.log(paquete)
  
   return `${serialNumber},PASS?,\r\n`;
 };
