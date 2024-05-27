@@ -11,7 +11,7 @@ const incrementDecrementPositions = (serialNumber, panAction, panValue, panSpeed
   }
   
   paquete = `${serialNumber},INCDEC,${panAction},${panValue},${panSpeed},${tiltAction},${tiltValue},${tiltSpeed},${lampAction},${lampValue},${lampSpeed},\\r\\n`;
-   // enviarComando(paquete);
+  //  enviarComando(paquete);
    console.log(paquete)
   return paquete;
 };

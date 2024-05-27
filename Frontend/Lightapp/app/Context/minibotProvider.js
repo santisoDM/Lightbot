@@ -4,7 +4,7 @@ import MyContext from './MyContext';
 
 const MinibotProvider = ({ children }) => {
   const [state, setState] = useState({ 
-    serialNumber: '3056105880'
+    serialNumber: '1234567890'
    });
 
   return (

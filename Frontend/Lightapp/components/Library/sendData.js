@@ -4,7 +4,7 @@
 // const deviceId = 'device-id';
 // const serviceUUID = 'service-uuid';
 // const characteristicUUID = 'characteristic-uuid';
-// export function  // enviarComando(comando) {
+// export function enviarComando(comando) {
 
 //     const paquete = comando;
 //     // Convertir el paquete a un ArrayBuffer

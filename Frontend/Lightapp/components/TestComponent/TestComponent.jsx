@@ -47,7 +47,7 @@ const TestComponent = ({state}) => {
   const handlePress = (command) => { 
         switch (command) {
             case 'SSID':
-              configureSSID(serialNumber, ssid="Nombre de la red")
+              configureSSID(serialNumber,"Nombre de la red")
                 break;
             case 'PASS':
                 configurePassword(serialNumber, '123456')
@@ -71,31 +71,31 @@ const TestComponent = ({state}) => {
             queryMyIP(serialNumber)
                 break;
             case 'RUNPOS':
-                runPositions(serialNumber, '1800', '1', '900', '1', '2', '1000', '10', '0,0');
+                runPositions(serialNumber, 1800, 1, 900, 1, 2, 1000, 10, 0,0);
                 break;
                 case 'INCDEC':
-                    incrementDecrementPositions(serialNumber, '1', 30, 5, '1', 20, 10, '0', 50, 8);
+                    incrementDecrementPositions(serialNumber, 1, 30, 5, 1, 20, 10, 0, 50, 8);
                     break;
             case 'SAVEPAGE':
-                // Lógica para el comando SAVEPAGE
+                savePage(serialNumber,1,10)
                 break;
             case 'LOADPAGE':
-                // Lógica para el comando LOADPAGE
+                loadPage(serialNumber, 1)
                 break;
             case 'SAVESCENE':
-                // Lógica para el comando SAVESCENE
+                saveScene(serialNumber, 1, 1,3)
                 break;
             case 'LOADSCENE':
-                // Lógica para el comando LOADSCENE
+                loadScene(serialNumber, 1,1)
                 break;
             case 'STOPSCENE':
-                // Lógica para el comando STOPSCENE
+                stopScene(serialNumber)
                 break;
             case 'SETSPEED':
-                // Lógica para el comando SETSPEED
+               setSpeed(serialNumber, 1)
                 break;
             case 'SETDELAY':
-                // Lógica para el comando SETDELAY
+                setDelay(serialNumber, 10)
                 break;
             default:
                 console.log('Comando no reconocido');
