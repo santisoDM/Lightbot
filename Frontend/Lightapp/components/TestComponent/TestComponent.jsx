@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Button, StyleSheet, ScrollView } from 'react-native';
+import React,{useState} from 'react';
+import { View, Button, StyleSheet, ScrollView, Text } from 'react-native';
 // Imports Network Commands
 import querySSID from '../Library/Network commands/SSID Query/SSIDQuery';
 import turnBluetoothOff from '../Library/Network commands/Bluetooth Off/BluetoothOff'
@@ -9,6 +9,7 @@ import configurePassword from '../Library/Network commands/Password Config/passw
 import queryPassword from '../Library/Network commands/Password Query/passwordQuery'
 import resetWifi from '../Library/Network commands/Reset Wifi/ResetWifi'
 import configureSSID from '../Library/Network commands/SSID Config/configureSSID'
+// Imports Scene and Positions Commands
 import incrementDecrementPositions from '../Library/Scene and positions commands/Increment-Decrement Positions/incrementDecrementPositions'
 import loadPage from '../Library/Scene and positions commands/Load Page/loadPage'
 import savePage from '../Library/Scene and positions commands/Save Page/savePage'
@@ -19,11 +20,10 @@ import setSpeed from '../Library/Scene and positions commands/Set Speed/setSpeed
 import setDelay from '../Library/Scene and positions commands/Set Delay/setDelay'
 import runPositions from '../Library/Scene and positions commands/Run Positions/runPositions'
 
-
-
 const TestComponent = ({state}) => {
-    let serialNumber = state.serialNumber
-    console.log(serialNumber)
+  const [aviso, setAviso] = useState(null)
+  let serialNumber = state.serialNumber
+  
   const commands = [
     { label: 'SSID', command: 'SSID' },
     { label: 'PASS', command: 'PASS' },
@@ -45,68 +45,68 @@ const TestComponent = ({state}) => {
   ];
 
   const handlePress = (command) => { 
-        switch (command) {
-            case 'SSID':
-              configureSSID(serialNumber,"Nombre de la red")
-                break;
-            case 'PASS':
-                configurePassword(serialNumber, '123456')
-                break;
-            case 'SSID?':
-                querySSID(serialNumber)
-                break;
-            case 'PASS?':
-                queryPassword(serialNumber)
-                break;
-            case 'BLEON':
-                turnBluetoothOn(serialNumber)
-                break;
-            case 'BLEOFF':
-                turnBluetoothOff(serialNumber)
-                break;
-            case 'RESETWIFI':
-              resetWifi(serialNumber)
-                break;
-            case 'MYIP':
-            queryMyIP(serialNumber)
-                break;
-            case 'RUNPOS':
-                runPositions(serialNumber, 1800, 1, 900, 1, 2, 1000, 10, 0,0);
-                break;
-                case 'INCDEC':
-                    incrementDecrementPositions(serialNumber, 1, 30, 5, 1, 20, 10, 0, 50, 8);
-                    break;
-            case 'SAVEPAGE':
-                savePage(serialNumber,1,10)
-                break;
-            case 'LOADPAGE':
-                loadPage(serialNumber, 1)
-                break;
-            case 'SAVESCENE':
-                saveScene(serialNumber, 1, 1,3)
-                break;
-            case 'LOADSCENE':
-                loadScene(serialNumber, 1,1)
-                break;
-            case 'STOPSCENE':
-                stopScene(serialNumber)
-                break;
-            case 'SETSPEED':
-               setSpeed(serialNumber, 1)
-                break;
-            case 'SETDELAY':
-                setDelay(serialNumber, 10)
-                break;
-            default:
-                console.log('Comando no reconocido');
-        
+    switch (command) {
+      case 'SSID':
+        setAviso(configureSSID(serialNumber, "Nombre de la red"))
+        break;
+      case 'PASS':
+        setAviso(configurePassword(serialNumber, '123456'))
+        break;
+      case 'SSID?':
+        setAviso(querySSID(serialNumber))
+        break;
+      case 'PASS?':
+        setAviso(queryPassword(serialNumber))
+        break;
+      case 'BLEON':
+        setAviso(turnBluetoothOn(serialNumber))
+        break;
+      case 'BLEOFF':
+        setAviso(turnBluetoothOff(serialNumber))
+        break;
+      case 'RESETWIFI':
+        setAviso(resetWifi(serialNumber))
+        break;
+      case 'MYIP':
+        setAviso(queryMyIP(serialNumber))
+        break;
+      case 'RUNPOS':
+        setAviso(runPositions(serialNumber, 1800, 1, 900, 1, 2, 1000, 10, 0, 0))
+        break;
+      case 'INCDEC':
+        setAviso(incrementDecrementPositions(serialNumber, 1, 30, 5, 1, 20, 10, 0, 50, 8))
+        break;
+      case 'SAVEPAGE':
+        setAviso(savePage(serialNumber, 1, 10))
+        break;
+      case 'LOADPAGE':
+        setAviso(loadPage(serialNumber, 1))
+        break;
+      case 'SAVESCENE':
+        setAviso(saveScene(serialNumber, 1, 1, 3))
+        break;
+      case 'LOADSCENE':
+        setAviso(loadScene(serialNumber, 1, 1))
+        break;
+      case 'STOPSCENE':
+        setAviso(stopScene(serialNumber))
+        break;
+      case 'SETSPEED':
+        setAviso(setSpeed(serialNumber, 1))
+        break;
+      case 'SETDELAY':
+        setAviso(setDelay(serialNumber, 10))
+        break;
+      default:
+        console.log('Comando no reconocido')
     }
-        
-    console.log(`Command pressed: ${command}`);
-  };
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.connectButtonContainer}>
+        <Button title='Conectar con el dispositivo'/>
+      </View>
       <View style={styles.row}>
         {commands.map((cmd, index) => (
           <View style={styles.buttonContainer} key={index}>
@@ -114,9 +114,19 @@ const TestComponent = ({state}) => {
           </View>
         ))}
       </View>
+      <View>
+        <Text style={styles.text}>Comando enviado</Text>
+        {
+          !aviso 
+          ?
+          ''
+          :
+          <Text style={styles.text}>{aviso}</Text>
+        }
+      </View>
     </ScrollView>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -124,7 +134,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     padding: 10,
-    paddingLeft:100,
+    paddingLeft: 100,
   },
   row: {
     flexDirection: 'row',
@@ -134,6 +144,19 @@ const styles = StyleSheet.create({
     width: '30%',
     margin: 5,
   },
-});
+  text: {
+    marginTop: 20,
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#333',
+  },
+  connectButtonContainer: {
+    marginTop: 20,
+    marginRight: 50,
+    padding: 10,   
+    borderRadius: 5,
+  },
+})
 
-export default TestComponent;
+export default TestComponent

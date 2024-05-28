@@ -8,10 +8,10 @@ const querySSID = (serialNumber) => {
   if (!validateSerialNumber(serialNumber)) {
     throw new Error('Invalid serialNumber');
   }
-  paquete = `${serialNumber},SSID?,\r\n`
+  paquete = `${serialNumber},SSID?,\\r\\n`
   //  // enviarComando(paquete)
   console.log(paquete)
-  return `${serialNumber},SSID?,\r\n`;
+  return `${serialNumber},SSID?,\\r\\n`;
 };
 
 export default querySSID;
