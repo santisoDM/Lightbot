@@ -3,12 +3,12 @@ const validateSSID = require ("./SSID Config/validateSSID")
 const validateResetWifi = require ("./Reset Wifi/validateResetWifi")
 const validatePassword = require ("./Password Config/validatePassword")
 const validateTurnBluetoothOff = require ("./Bluetooth Off/BluetoothOffValidator")
-const { enviarComando } = require ("../sendData")
+//const { enviarComando } = require ("../sendData")
 const centralController = async (serial, command, information) => {
   try {
     if (!command || typeof command != "string")
       return "Well, the command isn't the right type";
-    else if (typeof information == number)
+    else if (typeof information == 'number')
       return "The extra information should be or an string, or an object with strings with key value pairs that explains de exact meaning of the information.";
 
     switch (command) {
@@ -20,6 +20,7 @@ const centralController = async (serial, command, information) => {
       }
       case "SSID": {
         if (!validateSSID(serial, information?.ssid)) {
+          console.log(information)
           throw new Error("Invalid serialNumber or ssid");
         }
         return `${serial},${command},${information.ssid},\\r\\n`;
@@ -42,17 +43,16 @@ const centralController = async (serial, command, information) => {
           throw new Error("Invalid serialNumber");
         }
         paquete = `${serial},${command},\r\n`;
-        enviarComando(paquete);
         return `${serial},${command},\r\n`;
       }
       default: {
-        !validateTurnBluetoothOff(serial)
-          ? new Error("Invalid serialNumber")
-          : `${serial},${command},\r\n`;
+        console.log('we are here, and the command is: ' + command)
+        if(!validateTurnBluetoothOff(serial)) throw new Error('Invalid serialNumber');
+        return `${serial},${command}, \r\n`
       }
     }
-  } catch (error) {
-    throw new Error(error?.message);
+  } catch (err) {
+    throw new Error(err?.message);
   }
 };
 
