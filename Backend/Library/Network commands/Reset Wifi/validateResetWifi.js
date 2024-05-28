@@ -5,5 +5,5 @@ const validateResetWifi = (serialNumber) => {
     return isSerialNumberValid;
   };
   
-  export default validateResetWifi;
+  module.exports= validateResetWifi;
   

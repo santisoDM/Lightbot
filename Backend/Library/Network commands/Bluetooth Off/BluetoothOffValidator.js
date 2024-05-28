@@ -5,5 +5,5 @@ const validateTurnBluetoothOff = (serialNumber) => {
     return isSerialNumberValid;
   };
   
-  export default validateTurnBluetoothOff;
+  module.exports= validateTurnBluetoothOff;
   

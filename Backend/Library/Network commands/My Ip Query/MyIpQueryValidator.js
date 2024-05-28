@@ -8,5 +8,5 @@ const validateQueryMyIP = (serialNumber) => {
     return true;
   };
   
-  export default validateQueryMyIP;
+  module.exports= validateQueryMyIP;
   

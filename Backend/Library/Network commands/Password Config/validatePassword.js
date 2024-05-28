@@ -7,5 +7,5 @@ const validatePassword = (serialNumber, password) => {
     return isSerialNumberValid && isPasswordValid;
   };
   
-  export default validatePassword;
+ module.exports= validatePassword;
   
