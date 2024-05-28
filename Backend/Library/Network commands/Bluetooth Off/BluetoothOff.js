@@ -1,5 +1,5 @@
 // turnBluetoothOff.js
-import validateTurnBluetoothOff from './validateTurnBluetoothOff';
+import validateTurnBluetoothOff from './BluetoothOffValidator';
 
 const turnBluetoothOff = (serialNumber) => {
   if (!validateTurnBluetoothOff(serialNumber)) {

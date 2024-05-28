@@ -7,5 +7,5 @@ const validateSSID = (serialNumber, ssid) => {
     return isSerialNumberValid && isSSIDValid;
   };
   
-  export default validateSSID;
+  module.exports= validateSSID;
   

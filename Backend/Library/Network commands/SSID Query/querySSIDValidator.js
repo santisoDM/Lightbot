@@ -5,5 +5,5 @@ const validateSerialNumber = (serialNumber) => {
     return isSerialNumberValid;
   };
   
-  export default validateSerialNumber;
+  module.exports=validateSerialNumber;
   

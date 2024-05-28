@@ -1,10 +1,11 @@
-import { BleManager } from 'react-native-ble-plx';
+//import { BleManager } from 'react-native-ble-plx';
+const {BleManager} = require('react-native-ble-plx')
 const manager = new BleManager();
 // Supongamos que ya tienes el id del dispositivo y el id del servicio y característica que quieres usar
 const deviceId = 'device-id';
 const serviceUUID = 'service-uuid';
 const characteristicUUID = 'characteristic-uuid';
-export function enviarComando(comando) {
+function enviarComando(comando) {
     // Convertir los datos a cadena de texto
     const datosString = datos.join(',');
     // Crear el paquete de envío según el protocolo, agregando "\r\n" al final
@@ -23,3 +24,5 @@ export function enviarComando(comando) {
         console.log('Error al enviar comando:', error);
     });
 }
+module.exports = enviarComando
+
