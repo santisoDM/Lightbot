@@ -9,7 +9,8 @@ const configureSSID = (serialNumber, ssid) => {
     throw new Error('Invalid serialNumber or ssid');
   }
   paquete = `${serialNumber},SSID?,${ssid}\r\n`
-  enviarComando(paquete)
+   // enviarComando(paquete)
+   console.log(paquete)
   return `${serialNumber},SSID,${ssid},\\r\\n`;
 };
 

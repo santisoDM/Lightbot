@@ -7,7 +7,8 @@ const turnBluetoothOn = (serialNumber) => {
     throw new Error('Invalid parameters for turnBluetoothOn');
   }
   paquete = `${serialNumber},BLEON,\r\n`
-  enviarComando(paquete)
+   // enviarComando(paquete)
+   console.log(paquete)
   return `${serialNumber},BLEON,\\r\\n`;
 };
 

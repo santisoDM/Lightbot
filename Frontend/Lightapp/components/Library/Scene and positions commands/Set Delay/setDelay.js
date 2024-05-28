@@ -10,7 +10,8 @@ const setDelay = (serialNumber, delay) => {
     throw new Error('Invalid parameters for setDelay');
   }
   paquete = `${serialNumber},SETdelay,${delay},\\r\\n`;
-  enviarComando(paquete);
+   // enviarComando(paquete);
+   console.log(paquete)
   return paquete;
 };
 
