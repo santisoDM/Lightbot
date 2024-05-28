@@ -3,8 +3,8 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
-require('./db.js');
-
+//require('./db.js');
+const updHan = require('../Backend/udpStuff/updHandler')
 const server = express();
 
 server.name = 'API';
@@ -22,6 +22,8 @@ server.use((req, res, next) => {
   next();
 });
 
+//Route of proof
+server.use('/', updHan)
 
 // Error catching endware.
 server.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
