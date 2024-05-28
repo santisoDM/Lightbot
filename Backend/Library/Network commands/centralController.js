@@ -45,10 +45,14 @@ const centralController = async (serial, command, information) => {
         paquete = `${serial},${command},\r\n`;
         return `${serial},${command},\r\n`;
       }
+      // default: {
+      //   console.log('we are here, and the command is: ' + command)
+      //   if(!validateTurnBluetoothOff(serial)) throw new Error('Invalid serialNumber');
+      //   return `${serial},${command}, \r\n`
+      // }
       default: {
-        console.log('we are here, and the command is: ' + command)
-        if(!validateTurnBluetoothOff(serial)) throw new Error('Invalid serialNumber');
-        return `${serial},${command}, \r\n`
+       
+        return `${serial},${command},${information}\r\n`
       }
     }
   } catch (err) {
