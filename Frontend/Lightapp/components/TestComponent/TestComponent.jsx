@@ -48,7 +48,8 @@
    const handlePress = (command) => {
   switch (command) {
     case 'SSID':
-      setAviso(configureSSID(serialNumber, "Nombre de la red"),);
+      setAviso(configureSSID(serialNumber, "Nombre de la red"));
+      console.log(aviso)
       break;
     case 'PASS':
       setAviso(configurePassword(serialNumber, '123456'));
@@ -105,7 +106,8 @@
 };
 useEffect(() => {
   if (aviso) {
-    getMinibotData(aviso,state.message);
+   console.log("esto es lo que se manda: " + aviso);
+    getMinibotData(aviso);
   }
 }, [aviso]);
 
@@ -137,8 +139,8 @@ useEffect(() => {
               :
               <Text style={styles.text}>{aviso}</Text>
             }
-{ state?   <Text style={styles.text}>Comando recibido: {JSON.stringify(state)}</Text> : null }
-    <Text style={styles.text}>{serialNumber}</Text> 
+{ state?   <Text style={styles.text}>Comando recibido: {JSON.stringify(state.message)}</Text> : null }
+    <Text style={styles.text}>Serial Number: {serialNumber}</Text> 
 
           </View>
         </ScrollView>

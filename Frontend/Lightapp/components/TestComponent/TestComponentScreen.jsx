@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native';
 import TestComponent from './TestComponent';
-import React, { useContext, useState, useRef } from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import MyContext from '@/app/Context/MyContext';
 import axios from 'axios';
 import { URLCOMMUNICATION } from '@/constants/constants';
@@ -8,14 +8,12 @@ import { URLCOMMUNICATION } from '@/constants/constants';
 const TestComponentScreen = () => {
   const { state, setState } = useContext(MyContext);
 
-
-
+  // Creamos un nuevo estado para manejar el envío de datos
+  const [dataToSend, setDataToSend] = useState(null);
 
   const getSerialNumber = () => {
-
     axios.post(URLCOMMUNICATION, state)
       .then(response => {   
-
         const message = response.data.message;
         const parts = message.split(',');
 
@@ -30,7 +28,6 @@ const TestComponentScreen = () => {
             serial: newSerialNumber,
             command: newCommand,
             data: newData,
-           
           }));
         } else {
           console.error('Formato de mensaje inesperado');
@@ -42,44 +39,51 @@ const TestComponentScreen = () => {
   };
 
   const getMinibotData = (data, message) => {
-   
-   
-      const parts = data.split(',');
+    console.log(data);
+    const parts = data.split(',');
+  
+    if (parts.length >= 3) {
+      const newSerialNumber = parts[0];
+      const newCommand = parts[1];
+      const newData = parts.slice(2, -1).join(',');
 
-      if (parts.length >= 3) {
-        const newSerialNumber = parts[0];
-        const newCommand = parts[1];
-        const newData = parts.slice(2, -1).join(',');
+      // Actualizamos el estado con los nuevos valores
+      setState(prevState => ({
+        ...prevState,
+        serial: newSerialNumber,
+        command: newCommand,
+        data: newData,
+        message: message,
+      }));
 
-        // Actualizamos el estado con los nuevos valores
-        setState(prevState =>({
-          ...prevState,
-          serial: newSerialNumber,
-          command: newCommand,
-          data: newData,
-           message: message,
-        }));
-      } else {
-        console.error('Formato de mensaje inesperado');
-      }
-    
-
-
-    axios.post(URLCOMMUNICATION, state)
-      .then(response => {
-        
-        setState(prevState =>({
-          ...prevState,
-          
-          message: response.data.message,
-        }));
-
-      })
-      .catch(error => {
-        console.error(error);
+      // Actualizamos dataToSend para disparar el useEffect
+      setDataToSend({
+        serial: newSerialNumber,
+        command: newCommand,
+        data: newData,
       });
+    } else {
+      console.error('Formato de mensaje inesperado');
+    }
   };
- console.log(state)
+
+  useEffect(() => {
+    if (dataToSend) {
+      axios.post(URLCOMMUNICATION, dataToSend)
+        .then(response => {
+          setState(prevState => ({
+            ...prevState,
+            message: response.data.message,
+          }));
+          console.log(state);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+  }, [dataToSend]); // Este efecto se dispara cada vez que 'dataToSend' cambia
+
+
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={{ fontSize: 24, marginBottom: 20 }}>Testing Command Buttons</Text>
