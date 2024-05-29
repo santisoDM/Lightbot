@@ -1,20 +1,20 @@
 import { View, Text } from 'react-native';
 import TestComponent from './TestComponent';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useRef } from 'react';
 import MyContext from '@/app/Context/MyContext';
 import axios from 'axios';
 import { URLCOMMUNICATION } from '@/constants/constants';
 
 const TestComponentScreen = () => {
   const { state, setState } = useContext(MyContext);
-  const [dataToSend, setDataToSend] = useState(null);
-  const [dataObtained, setDataObtained] = useState('Aún no se ha iniciado ninguna comunicación');
+
+
+
 
   const getSerialNumber = () => {
 
     axios.post(URLCOMMUNICATION, state)
-      .then(response => {
-        console.log(response.data);
+      .then(response => {   
 
         const message = response.data.message;
         const parts = message.split(',');
@@ -27,9 +27,10 @@ const TestComponentScreen = () => {
           // Actualizamos el estado con los nuevos valores
           setState(prevState => ({
             ...prevState,
-            serialNumber: newSerialNumber,
+            serial: newSerialNumber,
             command: newCommand,
             data: newData,
+           
           }));
         } else {
           console.error('Formato de mensaje inesperado');
@@ -40,11 +41,9 @@ const TestComponentScreen = () => {
       });
   };
 
-  const getMinibotData = (data) => {
-    console.log(data);
-    console.log("Los datos son: " + data);
-
-    if (data) { // Verificamos que data no sea null o undefined
+  const getMinibotData = (data, message) => {
+   
+   
       const parts = data.split(',');
 
       if (parts.length >= 3) {
@@ -53,33 +52,38 @@ const TestComponentScreen = () => {
         const newData = parts.slice(2, -1).join(',');
 
         // Actualizamos el estado con los nuevos valores
-        setState({
+        setState(prevState =>({
+          ...prevState,
           serial: newSerialNumber,
           command: newCommand,
           data: newData,
-        });
+           message: message,
+        }));
       } else {
         console.error('Formato de mensaje inesperado');
       }
-    } else {
-      console.error('Data es null o undefined');
-    }
+    
 
-    console.log(dataToSend);
-    axios.post(URLCOMMUNICATION, dataToSend)
+
+    axios.post(URLCOMMUNICATION, state)
       .then(response => {
-        console.log(response.data);
-        setDataObtained(response.data); // Actualizamos el estado con la respuesta obtenida
+        
+        setState(prevState =>({
+          ...prevState,
+          
+          message: response.data.message,
+        }));
+
       })
       .catch(error => {
         console.error(error);
       });
   };
-
+ console.log(state)
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={{ fontSize: 24, marginBottom: 20 }}>Testing Command Buttons</Text>
-      <TestComponent state={state} getSerialNumber={getSerialNumber} getMinibotData={getMinibotData} dataObtained={dataObtained} />
+      <TestComponent state={state} setState={setState} getSerialNumber={getSerialNumber} getMinibotData={getMinibotData} />
     </View>
   );
 };
