@@ -20,7 +20,7 @@ import setSpeed from '../Library/Scene and positions commands/Set Speed/setSpeed
 import setDelay from '../Library/Scene and positions commands/Set Delay/setDelay'
 import runPositions from '../Library/Scene and positions commands/Run Positions/runPositions'
 
-const TestComponent = ({state}) => {
+const TestComponent = ({state, getSerialNumber, getMinibotData, dataObtained}) => {
   const [aviso, setAviso] = useState(null)
   let serialNumber = state.serialNumber
   
@@ -47,55 +47,71 @@ const TestComponent = ({state}) => {
   const handlePress = (command) => { 
     switch (command) {
       case 'SSID':
-        setAviso(configureSSID(serialNumber, "Nombre de la red"))
+      setAviso(configureSSID(serialNumber, "Nombre de la red"))
+      getMinibotData(aviso)
         break;
       case 'PASS':
         setAviso(configurePassword(serialNumber, '123456'))
+        getMinibotData(aviso)
         break;
       case 'SSID?':
         setAviso(querySSID(serialNumber))
+        getMinibotData(aviso) //da error
         break;
       case 'PASS?':
         setAviso(queryPassword(serialNumber))
+        getMinibotData(aviso) //daerror
         break;
       case 'BLEON':
         setAviso(turnBluetoothOn(serialNumber))
+        getMinibotData(aviso)
         break;
       case 'BLEOFF':
         setAviso(turnBluetoothOff(serialNumber))
+        getMinibotData(aviso)
         break;
-      case 'RESETWIFI':
-        setAviso(resetWifi(serialNumber))
-        break;
+      // case 'RESETWIFI':
+      //   setAviso(resetWifi(serialNumber))
+      //   break;
       case 'MYIP':
         setAviso(queryMyIP(serialNumber))
+        getMinibotData(aviso)
         break;
       case 'RUNPOS':
         setAviso(runPositions(serialNumber, 1800, 1, 900, 1, 2, 1000, 10, 0, 0))
+                getMinibotData(aviso)
         break;
       case 'INCDEC':
         setAviso(incrementDecrementPositions(serialNumber, 1, 30, 5, 1, 20, 10, 0, 50, 8))
+        getMinibotData(aviso)
         break;
       case 'SAVEPAGE':
         setAviso(savePage(serialNumber, 1, 10))
+        getMinibotData(aviso)        
         break;
       case 'LOADPAGE':
         setAviso(loadPage(serialNumber, 1))
+        getMinibotData(aviso)
         break;
       case 'SAVESCENE':
         setAviso(saveScene(serialNumber, 1, 1, 3))
+        getMinibotData(aviso)
         break;
       case 'LOADSCENE':
         setAviso(loadScene(serialNumber, 1, 1))
+        getMinibotData(aviso)
         break;
       case 'STOPSCENE':
         setAviso(stopScene(serialNumber))
+        getMinibotData(aviso)
         break;
       case 'SETSPEED':
         setAviso(setSpeed(serialNumber, 1))
+        getMinibotData(aviso)
         break;
       case 'SETDELAY':
         setAviso(setDelay(serialNumber, 10))
+        getMinibotData(aviso)
         break;
       default:
         console.log('Comando no reconocido')
@@ -105,12 +121,12 @@ const TestComponent = ({state}) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.connectButtonContainer}>
-        <Button title='Conectar con el dispositivo'/>
+        <Button title='Conectar con el dispositivo' onPress={getSerialNumber}/>
       </View>
       <View style={styles.row}>
         {commands.map((cmd, index) => (
           <View style={styles.buttonContainer} key={index}>
-            <Button title={cmd.label} onPress={() => handlePress(cmd.command)} />
+            <Button title={cmd.label} onPress={() => (handlePress(cmd.command))} />
           </View>
         ))}
       </View>
@@ -123,6 +139,9 @@ const TestComponent = ({state}) => {
           :
           <Text style={styles.text}>{aviso}</Text>
         }
+<Text style={styles.text}>{dataObtained}</Text> 
+<Text style={styles.text}>{serialNumber}</Text> 
+
       </View>
     </ScrollView>
   )
