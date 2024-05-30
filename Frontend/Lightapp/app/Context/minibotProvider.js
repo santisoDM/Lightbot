@@ -7,8 +7,7 @@ const MinibotProvider = ({ children }) => {
     serial: '1234567890',
     command: "prueba",
     data: null,
-    message: null,
-   
+    message: null,   
    });
 
 
