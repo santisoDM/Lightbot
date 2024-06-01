@@ -10,7 +10,8 @@ const runPositions = (serialNumber, panPosition, panSpeed, tiltPosition, tiltSpe
     throw new Error('Invalid parameters for runPositions');
   }
   paquete = `${serialNumber},RUNPOS,${panPosition},${panSpeed},${tiltPosition},${tiltSpeed},${lampBrightness},${lampSpeed},${strobe},${delay},\\r\\n`;
-  enviarComando(paquete);
+   // enviarComando(paquete);
+   console.log(paquete)
   return paquete;
 };
 

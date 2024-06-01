@@ -10,7 +10,8 @@ const saveScene = (serialNumber, sceneNumber, startPage, endPage) => {
     throw new Error('Invalid parameters for saveScene');
   }
   paquete = `${serialNumber},SAVEscene,${sceneNumber},${startPage},${endPage},\\r\\n`;
-  enviarComando(paquete);
+   // enviarComando(paquete);
+   console.log(paquete)
   return paquete;
 };
 

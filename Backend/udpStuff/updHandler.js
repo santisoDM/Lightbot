@@ -4,14 +4,14 @@ const updHan = Router();
 const centralController = require('../Library/Network commands/centralController')
 updHan.post("/communication", async (req, res) => {
   try {
-    const { command, serial , info} = req.body;
+    const { command, serial , data} = req.body;
     let valResponse;
-    console.log(req.body.info)
+    console.log(req.body.data)
     if (!command || typeof command !== "string")
       return "I'm so sorry, for the moment we cannot succeed with the request.";
-    else if(!info){
+    else if(!data){
 valResponse= await centralController(serial,command);
-    } else valResponse = await centralController(serial,command, info);
+    } else valResponse = await centralController(serial,command, data);
     console.log(valResponse);
     const response = await prueba(valResponse);
     response

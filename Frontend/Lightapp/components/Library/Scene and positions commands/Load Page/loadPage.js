@@ -10,7 +10,8 @@ const loadPage = (serialNumber, pageNumber) => {
     throw new Error('Invalid parameters for loadPage');
   }
   paquete = `${serialNumber},LOADpage,${pageNumber},\\r\\n`;
-  enviarComando(paquete);
+   // enviarComando(paquete);
+   console.log(paquete)
   return paquete;
 };
 

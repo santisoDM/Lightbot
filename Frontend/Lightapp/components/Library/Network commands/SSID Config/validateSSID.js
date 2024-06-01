@@ -4,6 +4,7 @@ const validateSSID = (serialNumber, ssid) => {
     const isSerialNumberValid = /^\d{10}$/.test(serialNumber);
     // Verificar que ssid sea una cadena no vacía
     const isSSIDValid = typeof ssid === 'string' && ssid.trim().length > 0;
+    console.log(isSerialNumberValid, isSSIDValid)
     return isSerialNumberValid && isSSIDValid;
   };
   
