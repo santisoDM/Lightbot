@@ -1,0 +1,4 @@
+<key>NSBluetoothAlwaysUsageDescription</key>
+<string>We need your permission to use Bluetooth</string>
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>We need your permission to access your location</string>

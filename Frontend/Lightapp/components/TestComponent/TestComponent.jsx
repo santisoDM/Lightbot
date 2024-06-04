@@ -22,6 +22,7 @@ import stopScene from '../Library/Scene and positions commands/Stop Scene/stopSc
 import setSpeed from '../Library/Scene and positions commands/Set Speed/setSpeed';
 import setDelay from '../Library/Scene and positions commands/Set Delay/setDelay';
 import runPositions from '../Library/Scene and positions commands/Run Positions/runPositions';
+import {attempting} from '../Library/bleScan';
 
 const TestComponent = ({ state, getMinibotData, getSerialNumber, dataObtained }) => {
   const [aviso, setAviso] = useState(null);
@@ -131,6 +132,7 @@ console.log(inputs.INCDEC)
     <ScrollView contentContainerStyle={styles.container} ref={scrollViewRef}>
       <View style={styles.connectButtonContainer}>
         <Button title="Conectar con el dispositivo" onPress={getSerialNumber} />
+        <Button title='Iniciar escaneo de dispositivos' onPress={attempting}/>
       </View>
       <View style={styles.commandsContainer}>
         {Commands.map((cmd, index) => (
