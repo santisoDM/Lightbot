@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Button, StyleSheet, ScrollView, TextInput, Text } from 'react-native';
+import { View, Button, StyleSheet, ScrollView, TextInput, Text, Dimensions } from 'react-native';
 
 import Commands from '@/constants/Commands';
 
@@ -153,188 +153,188 @@ console.log(inputs.INCDEC)
               />
             )}
             {cmd.command === 'RUNPOS' && (
-              <>
+              <View style={styles.inputContainer}>
                 <TextInput
                   style={styles.input}
                   placeholder="arg1"
-                  value={inputs.RUNPOS.arg1}
+                  value={inputs.RUNPOS.arg1.toString()}
                   onChangeText={(text) => handleInputChange('RUNPOS', Number(text), 'arg1')}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg2"
-                  value={inputs.RUNPOS.arg2}
+                  value={inputs.RUNPOS.arg2.toString()}
                   onChangeText={(text) => handleInputChange('RUNPOS', Number(text), 'arg2')}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg3"
-                  value={inputs.RUNPOS.arg3}
+                  value={inputs.RUNPOS.arg3.toString()}
                   onChangeText={(text) => handleInputChange('RUNPOS', Number(text), 'arg3')}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg4"
-                  value={inputs.RUNPOS.arg4}
+                  value={inputs.RUNPOS.arg4.toString()}
                   onChangeText={(text) => handleInputChange('RUNPOS', Number(text), 'arg4')}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg5"
-                  value={inputs.RUNPOS.arg5}
+                  value={inputs.RUNPOS.arg5.toString()}
                   onChangeText={(text) => handleInputChange('RUNPOS', Number(text), 'arg5')}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg6"
-                  value={inputs.RUNPOS.arg6}
+                  value={inputs.RUNPOS.arg6.toString()}
                   onChangeText={(text) => handleInputChange('RUNPOS', Number(text), 'arg6')}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg7"
-                  value={inputs.RUNPOS.arg7}
+                  value={inputs.RUNPOS.arg7.toString()}
                   onChangeText={(text) => handleInputChange('RUNPOS', Number(text), 'arg7')}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg8"
-                  value={inputs.RUNPOS.arg8}
+                  value={inputs.RUNPOS.arg8.toString()}
                   onChangeText={(text) => handleInputChange('RUNPOS', Number(text), 'arg8')}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg9"
-                  value={inputs.RUNPOS.arg9}
+                  value={inputs.RUNPOS.arg9.toString()}
                   onChangeText={(text) => handleInputChange('RUNPOS', Number(text), 'arg9')}
                 />
-              </>
+              </View>
             )}
             {cmd.command === 'INCDEC' && (
-              <>
+              <View style={styles.inputContainer}>
                 <TextInput
                   style={styles.input}
                   placeholder="arg1"
-                  value={inputs.INCDEC.arg1}
+                  value={inputs.INCDEC.arg1.toString()}
                   onChangeText={(text) => handleInputChange('INCDEC', Number(text), 'arg1')}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg2"
-                  value={inputs.INCDEC.arg2}
+                  value={inputs.INCDEC.arg2.toString()}
                   onChangeText={(text) => handleInputChange('INCDEC', Number(text), 'arg2')}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg3"
-                  value={inputs.INCDEC.arg3}
+                  value={inputs.INCDEC.arg3.toString()}
                   onChangeText={(text) => handleInputChange('INCDEC', Number(text), 'arg3')}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg4"
-                  value={inputs.INCDEC.arg4}
+                  value={inputs.INCDEC.arg4.toString()}
                   onChangeText={(text) => handleInputChange('INCDEC', Number(text), 'arg4')}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg5"
-                  value={inputs.INCDEC.arg5}
+                  value={inputs.INCDEC.arg5.toString()}
                   onChangeText={(text) => handleInputChange('INCDEC', Number(text), 'arg5')}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg6"
-                  value={inputs.INCDEC.arg6}
+                  value={inputs.INCDEC.arg6.toString()}
                   onChangeText={(text) => handleInputChange('INCDEC', Number(text), 'arg6')}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg7"
-                  value={inputs.INCDEC.arg7}
+                  value={inputs.INCDEC.arg7.toString()}
                   onChangeText={(text) => handleInputChange('INCDEC', Number(text), 'arg7')}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg8"
-                  value={inputs.INCDEC.arg8}
+                  value={inputs.INCDEC.arg8.toString()}
                   onChangeText={(text) => handleInputChange('INCDEC', Number(text), 'arg8')}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg9"
-                  value={inputs.INCDEC.arg9}
+                  value={inputs.INCDEC.arg9.toString()}
                   onChangeText={(text) => handleInputChange('INCDEC', Number(text), 'arg9')}
                 />
-              </>
+              </View>
             )}
             {cmd.command === 'SAVEPAGE' && (
-              <>
+              <View style={styles.inputContainer}>
                 <TextInput
                   style={styles.input}
                   placeholder="Page"
-                  value={inputs.SAVEPAGE.page}
+                  value={inputs.SAVEPAGE.page.toString()}
                   onChangeText={(text) => handleInputChange('SAVEPAGE', Number(text), 'page')}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="Other Arg"
-                  value={inputs.SAVEPAGE.otherArg}
+                  value={inputs.SAVEPAGE.otherArg.toString()}
                   onChangeText={(text) => handleInputChange('SAVEPAGE', Number(text), 'otherArg')}
                 />
-              </>
+              </View>
             )}
             {cmd.command === 'LOADPAGE' && (
               <TextInput
                 style={styles.input}
                 placeholder="Page"
-                value={inputs.LOADPAGE}
+                value={inputs.LOADPAGE.toString()}
                 onChangeText={(text) => handleInputChange('LOADPAGE', Number(text))}
               />
             )}
             {cmd.command === 'SAVESCENE' && (
-              <>
+              <View style={styles.inputContainer}>
                 <TextInput
                   style={styles.input}
                   placeholder="Scene"
-                  value={inputs.SAVESCENE.scene}
+                  value={inputs.SAVESCENE.scene.toString()}
                   onChangeText={(text) => handleInputChange('SAVESCENE', Number(text), 'scene')}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="Arg1"
-                  value={inputs.SAVESCENE.arg1}
+                  value={inputs.SAVESCENE.arg1.toString()}
                   onChangeText={(text) => handleInputChange('SAVESCENE', Number(text), 'arg1')}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="Arg2"
-                  value={inputs.SAVESCENE.arg2}
+                  value={inputs.SAVESCENE.arg2.toString()}
                   onChangeText={(text) => handleInputChange('SAVESCENE', Number(text), 'arg2')}
                 />
-              </>
+              </View>
             )}
             {cmd.command === 'LOADSCENE' && (
-              <>
+              <View style={styles.inputContainer}>
                 <TextInput
                   style={styles.input}
                   placeholder="Scene"
-                  value={inputs.LOADSCENE.scene}
+                  value={inputs.LOADSCENE.scene.toString()}
                   onChangeText={(text) => handleInputChange('LOADSCENE', Number(text), 'scene')}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="Arg1"
-                  value={inputs.LOADSCENE.arg1}
+                  value={inputs.LOADSCENE.arg1.toString()}
                   onChangeText={(text) => handleInputChange('LOADSCENE', Number(text), 'arg1')}
                 />
-              </>
+              </View>
             )}
             {cmd.command === 'SETSPEED' && (
               <TextInput
                 style={styles.input}
                 placeholder="Speed"
-                value={inputs.SETSPEED}
+                value={inputs.SETSPEED.toString()}
                 onChangeText={(text) => handleInputChange('SETSPEED', Number(text))}
               />
             )}
@@ -342,22 +342,34 @@ console.log(inputs.INCDEC)
               <TextInput
                 style={styles.input}
                 placeholder="Delay"
-                value={inputs.SETDELAY}
+                value={inputs.SETDELAY.toString()}
                 onChangeText={(text) => handleInputChange('SETDELAY', Number(text))}
               />
             )}
           </View>
         ))}
       </View>
-      <View>
-        <Text style={styles.text}>Comando enviado</Text>
-        {!aviso ? '' : <Text style={styles.text}>{aviso}</Text>}
-        {state ? <Text style={styles.text}>Comando recibido: {JSON.stringify(state.message)}</Text> : null}
-        <Text style={styles.text}>Serial Number: {state.serial}</Text>
-      </View>
+      <View style={styles.textContainer}>
+  <Text style={styles.text}>Comando enviado</Text>
+  {!aviso ? '' : (
+    <ScrollView horizontal>
+      <Text style={styles.text}>{aviso}</Text>
+    </ScrollView>
+  )}
+  {state ? (
+    <ScrollView horizontal>
+      <Text style={styles.text}>Comando recibido: {JSON.stringify(state.message)}</Text>
+    </ScrollView>
+  ) : null}
+  <ScrollView horizontal>
+    <Text style={styles.text}>Serial Number: {state.serial}</Text>
+  </ScrollView>
+</View>
     </ScrollView>
   );
 };
+
+const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -370,16 +382,20 @@ const styles = StyleSheet.create({
   commandsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center',
+    justifyContent: 'space-between', // Adjusted to space-between to ensure two columns
   },
   command: {
-    width: '45%',
+    width: (width / 2) - 20, // Ensure buttons are within screen bounds
     margin: 5,
     padding: 10,
     borderWidth: 1,
     borderRadius: 5,
     borderColor: '#ccc',
     backgroundColor: '#f9f9f9',
+  },
+  inputContainer: {
+    flexDirection: 'column', // Ensure inputs are stacked vertically
+    marginVertical: 5,
   },
   input: {
     height: 40,
@@ -391,10 +407,16 @@ const styles = StyleSheet.create({
   },
   text: {
     marginTop: 20,
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#333',
+  },
+  textContainer: {
+    width: width ,
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 20,
   },
 });
 
