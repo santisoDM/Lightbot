@@ -22,6 +22,7 @@ interface BluetoothLowEnergyApi {
 
 function useBLE(): BluetoothLowEnergyApi {
   const bleManager = useMemo(() => new BleManager(), []);
+  console.log(`Hola, Blemanager probando en línea 25 de BleCom: ${bleManager}`)
   const [allDevices, setAllDevices] = useState<Device[]>([]);
   const [connectedDevice, setConnectedDevice] = useState<Device | null>(null);
 console.log(allDevices);
@@ -52,9 +53,9 @@ console.log(allDevices);
     );
 
     return (
-      bluetoothScanPermission === "granted" &&
-      bluetoothConnectPermission === "granted" &&
-      fineLocationPermission === "granted"
+      bluetoothScanPermission === PermissionsAndroid.RESULTS.GRANTED &&
+      bluetoothConnectPermission === PermissionsAndroid.RESULTS.GRANTED &&
+      fineLocationPermission === PermissionsAndroid.RESULTS.GRANTED
     );
   };
 

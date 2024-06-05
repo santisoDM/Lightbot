@@ -81,13 +81,13 @@ android {
     ndkVersion rootProject.ext.ndkVersion
 
     buildToolsVersion rootProject.ext.buildToolsVersion
-    compileSdk rootProject.ext.compileSdkVersion
+    compileSdk 31
 
     namespace 'com.anonymous.Lightapp'
     defaultConfig {
         applicationId 'com.anonymous.Lightapp'
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion 21
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0.0"
     }
