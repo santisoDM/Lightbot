@@ -142,6 +142,7 @@ console.log(inputs.INCDEC)
       <View style={styles.connectButtonContainer}>
         <Button title="Conectar con el dispositivo" onPress={getSerialNumber} />
         <Button title="Buscar dispositivo Ble" onPress={scanDevicesXD} />
+         <Button title="Buscar dispositivo Ble" onPress={() => alert("hola")} />
       </View>
       <View style={styles.commandsContainer}>
         {Commands.map((cmd, index) => (
