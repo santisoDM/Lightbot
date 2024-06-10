@@ -46,10 +46,13 @@ const TestComponent = ({ state, getMinibotData, getSerialNumber, dataObtained })
 
   const scanDevicesXD= async()=> {
     const isAllowed = await requestPermissions();
+    console.log(isAllowed);
     if(isAllowed) scanForPeripherals();
   }
+
+  
   const scrollViewRef = useRef();
-console.log(inputs.INCDEC)
+
   const handleInputChange = (command, value, field) => {
     if (field) {
       setInputs((prevInputs) => ({

@@ -21,8 +21,10 @@ interface BluetoothLowEnergyApi {
 }
 
 function useBLE(): BluetoothLowEnergyApi {
+ 
   const bleManager = useMemo(() => new BleManager(), []);
-  console.log(`Hola, Blemanager probando en línea 25 de BleCom: ${bleManager}`)
+  console.log(JSON.stringify(bleManager))
+ 
   const [allDevices, setAllDevices] = useState<Device[]>([]);
   const [connectedDevice, setConnectedDevice] = useState<Device | null>(null);
 console.log(allDevices);
@@ -61,7 +63,7 @@ console.log(allDevices);
 
   const requestPermissions = async () => {
     if (Platform.OS === "android") {
-      if ((ExpoDevice.platformApiLevel ?? -1) < 31) {
+      if ((ExpoDevice.platformApiLevel ?? -1) < 34) {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
           {
@@ -85,38 +87,44 @@ console.log(allDevices);
   const isDuplicatedDevice = (devices: Device[], nextDevice: Device) =>
     devices.findIndex((device) => nextDevice.id === device.id) > -1;
 
-  const scanForPeripherals = () =>
-    bleManager.startDeviceScan(null, null, (error, device) => {
+  const scanForPeripherals = async () =>{
+   
+ await bleManager.startDeviceScan(null, null, (error, device) => {
+   
+  
       if (error) {
-        console.log(error);
+        console.log('Error durante el escaneo:', error.errorCode, error.message);
       }
       if (device && device.name?.includes("CorSense")) {
         setAllDevices((prevState: Device[]) => {
           if (!isDuplicatedDevice(prevState, device)) {
             return [...prevState, device];
           }
+          setTimeout(()=>{
+            bleManager.stopDeviceScan();}, 5000)
           return prevState;
         });
       }
     });
+    console.log("Esto es: " + prueba)
+}
+    const connectToDevice = async (device: Device) => {
+      try {
+        const deviceConnection = await bleManager.connectToDevice(device.id);
+        setConnectedDevice(deviceConnection);
+        await deviceConnection.discoverAllServicesAndCharacteristics();
+        bleManager.stopDeviceScan();
+      } catch (e) {
+        console.log("FALLÓ LA CONEXIÓN", e);
+      }
+    };
 
-  const connectToDevice = async (device: Device) => {
-    try {
-      const deviceConnection = await bleManager.connectToDevice(device.id);
-      setConnectedDevice(deviceConnection);
-      await deviceConnection.discoverAllServicesAndCharacteristics();
-      bleManager.stopDeviceScan();
-    } catch (e) {
-      console.log("FAILED TO CONNECT", e);
-    }
-  };
-
-  const disconnectFromDevice = () => {
-    if (connectedDevice) {
-      bleManager.cancelDeviceConnection(connectedDevice.id);
-      setConnectedDevice(null);
-    }
-  };
+    const disconnectFromDevice = () => {
+      if (connectedDevice) {
+        bleManager.cancelDeviceConnection(connectedDevice.id);
+        setConnectedDevice(null);
+      }
+    };
 
   
   return {
