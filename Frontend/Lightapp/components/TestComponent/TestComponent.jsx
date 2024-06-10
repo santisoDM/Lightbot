@@ -22,6 +22,7 @@ import stopScene from '../Library/Scene and positions commands/Stop Scene/stopSc
 import setSpeed from '../Library/Scene and positions commands/Set Speed/setSpeed';
 import setDelay from '../Library/Scene and positions commands/Set Delay/setDelay';
 import runPositions from '../Library/Scene and positions commands/Run Positions/runPositions';
+import useBle from "../Library/BleCom";
 
 const TestComponent = ({ state, getMinibotData, getSerialNumber, dataObtained }) => {
   const [aviso, setAviso] = useState(null);
@@ -38,6 +39,15 @@ const TestComponent = ({ state, getMinibotData, getSerialNumber, dataObtained })
     SETDELAY: 10
   });
 
+  //Para lo de Ble
+  const {
+    scanForPeripherals, requestPermissions 
+  }= useBle();
+
+  const scanDevicesXD= async()=> {
+    const isAllowed = await requestPermissions();
+    if(isAllowed) scanForPeripherals();
+  }
   const scrollViewRef = useRef();
 console.log(inputs.INCDEC)
   const handleInputChange = (command, value, field) => {
@@ -131,6 +141,7 @@ console.log(inputs.INCDEC)
     <ScrollView contentContainerStyle={styles.container} ref={scrollViewRef}>
       <View style={styles.connectButtonContainer}>
         <Button title="Conectar con el dispositivo" onPress={getSerialNumber} />
+        <Button title="Buscar dispositivo Ble" onPress={scanDevicesXD} />
       </View>
       <View style={styles.commandsContainer}>
         {Commands.map((cmd, index) => (
