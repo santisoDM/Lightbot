@@ -87,27 +87,29 @@ console.log(allDevices);
   const isDuplicatedDevice = (devices: Device[], nextDevice: Device) =>
     devices.findIndex((device) => nextDevice.id === device.id) > -1;
 
-  const scanForPeripherals = async () =>{
+ const scanForPeripherals = async () =>{
+
+    await bleManager.startDeviceScan(null, null, (error, device) => {   
+     
+         if (error) {
+           console.log('Error durante el escaneo:', error.errorCode, error.message);
+         }
+         if (device && device.name?.includes("CorSense")) {
+           setAllDevices((prevState: Device[]) => {
+             if (!isDuplicatedDevice(prevState, device)) {
+               return [...prevState, device];
+             }
+             setTimeout(()=>{
+               bleManager.stopDeviceScan();}, 5000)
+             return prevState;
+           });
+         }
+       });
    
- await bleManager.startDeviceScan(null, null, (error, device) => {
+   }
+
+
    
-  
-      if (error) {
-        console.log('Error durante el escaneo:', error.errorCode, error.message);
-      }
-      if (device && device.name?.includes("CorSense")) {
-        setAllDevices((prevState: Device[]) => {
-          if (!isDuplicatedDevice(prevState, device)) {
-            return [...prevState, device];
-          }
-          setTimeout(()=>{
-            bleManager.stopDeviceScan();}, 5000)
-          return prevState;
-        });
-      }
-    });
-    console.log("Esto es: " + prueba)
-}
     const connectToDevice = async (device: Device) => {
       try {
         const deviceConnection = await bleManager.connectToDevice(device.id);
