@@ -46,8 +46,15 @@ const TestComponent = ({ state, getMinibotData, getSerialNumber, dataObtained })
 
   const scanDevicesXD= async()=> {
     const isAllowed = await requestPermissions();
-   
-    if(isAllowed) scanForPeripherals();
+  
+// let alerta;
+    if(isAllowed)  {
+      
+      scanForPeripherals()
+    //   alerta = scanForPeripherals()
+    
+    // alert(JSON.stringify(alerta))
+    };
   }
 
 

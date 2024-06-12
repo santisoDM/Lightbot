@@ -13,7 +13,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSBluetoothAlwaysUsageDescription": "Esta aplicación utiliza Bluetooth para conectarse a dispositivos BLE.",
+        "NSBluetoothPeripheralUsageDescription": "Esta aplicación necesita acceso a Bluetooth para conectarse a dispositivos BLE."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -23,9 +27,14 @@
       "permissions": [
         "android.permission.BLUETOOTH",
         "android.permission.BLUETOOTH_ADMIN",
-        "android.permission.BLUETOOTH_CONNECT"
+        "android.permission.BLUETOOTH_ADVERTISE",
+        "android.permission.BLUETOOTH_SCAN",
+        "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION"
       ],
-      "package": "com.anonymous.Lightapp"
+      "package": "com.anonymous.Lightapp",
+      "minSdkVersion": 21
     },
     "web": {
       "bundler": "metro",
@@ -35,14 +44,39 @@
     "plugins": [
       "expo-router",
       [
+        "react-native-permissions",
+        {
+          "iosPermissions": {
+            "bluetoothPeripheral": "Necesitamos acceso a Bluetooth para conectar con dispositivos"
+          },
+          "android": {
+            "permissions": [
+              "android.permission.BLUETOOTH",
+              "android.permission.BLUETOOTH_ADMIN",
+              "android.permission.BLUETOOTH_ADVERTISE",
+              "android.permission.BLUETOOTH_SCAN",
+              "android.permission.BLUETOOTH_CONNECT"
+            ]
+          }
+        }
+      ],
+      [
         "react-native-ble-plx",
         {
           "isBackgroundEnabled": true,
-          "modes": [
-            "peripheral",
-            "central"
-          ],
+          "modes": ["peripheral", "central"],
           "bluetoothAlwaysPermission": "Allow $(PRODUCT_NAME) to detect your controller with bluetooth"
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 31,
+            "targetSdkVersion": 31,
+            "minSdkVersion": 21,
+            "buildToolsVersion": "31.0.0"
+          }
         }
       ]
     ],
