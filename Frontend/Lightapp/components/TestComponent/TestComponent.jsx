@@ -432,13 +432,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#333',
+    backgroundColor: '#fff', // Add background color
+    padding: 5, // Add padding for better visibility
   },
   textContainer: {
     width: width ,
     padding: 10,
     borderRadius: 5,
     marginBottom: 20,
+    backgroundColor: '#fff', // Add background color
   },
 });
 
 export default TestComponent;
+
+

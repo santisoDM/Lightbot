@@ -1,3 +1,3 @@
- export const URLCOMMUNICATION = "http://localhost:3001/communication"
+ export const URLCOMMUNICATION = "https://lightbot.onrender.com/communication"
 
 
