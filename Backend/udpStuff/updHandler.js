@@ -8,7 +8,7 @@ updHan.get("/", (req, res) => {
   res.send("Hello, world!");
 });
 
-updHan.post("/", async (req, res) => {
+updHan.post("/communication", async (req, res) => {
   try {
     const { command, serial, data } = req.body;
     let valResponse;
