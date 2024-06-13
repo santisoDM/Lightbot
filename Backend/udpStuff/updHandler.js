@@ -2,7 +2,7 @@ const { Router } = require("express");
 const prueba = require("../udpStuff/udpDePrueba");
 const updHan = Router();
 const centralController = require('../Library/Network commands/centralController')
-updHan.post("/communication", async (req, res) => {
+updHan.post("/", async (req, res) => {
   try {
     const { command, serial , data} = req.body;
     let valResponse;
