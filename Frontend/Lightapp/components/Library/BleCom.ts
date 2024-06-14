@@ -88,7 +88,7 @@ function useBLE(): BluetoothLowEnergyApi {
           }
 
           if (device) {
-            console.log("Esto es el serviceUUIDsr", device.serviceUUIDs);
+           alert("Dispositivo conectado. Este es el serviceUUIDsr: " + device.serviceUUIDs);
             bleManager.stopDeviceScan();
             setAllDevices((prevState: Device[]) => {
               if (!isDuplicatedDevice(prevState, device)) {

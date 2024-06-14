@@ -26,6 +26,7 @@ import useBle from "../Library/BleCom";
 
 const TestComponent = ({ state, getMinibotData, getSerialNumber, dataObtained }) => {
   const [aviso, setAviso] = useState(null);
+  const [alerta,setAlerta] = useState(null)
   const [inputs, setInputs] = useState({
     SSID: 'WiFi_Fibertel_jru_2.4GHz',
     PASS: 'xnr4mjdcxr',
@@ -47,13 +48,11 @@ const TestComponent = ({ state, getMinibotData, getSerialNumber, dataObtained })
   const scanDevicesXD= async()=> {
     const isAllowed = await requestPermissions();
   
-// let alerta;
+
     if(isAllowed)  {
       
-      scanForPeripherals()
-    //   alerta = scanForPeripherals()
-    
-    // alert(JSON.stringify(alerta))
+      setAlerta(scanForPeripherals())
+     
     };
   }
 
