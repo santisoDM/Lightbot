@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { PermissionsAndroid, Platform } from "react-native";
-import { BleManager, Device, State } from "react-native-ble-plx";
+import { Alert, PermissionsAndroid, Platform } from "react-native";
+import { BleManager, Device, State, Service } from "react-native-ble-plx";
 import * as ExpoDevice from "expo-device";
 
 interface BluetoothLowEnergyApi {
@@ -10,6 +10,7 @@ interface BluetoothLowEnergyApi {
   disconnectFromDevice: () => void;
   connectedDevice: Device | null;
   allDevices: Device[];
+  bleServices: Service[];
 }
 
 function useBLE(): BluetoothLowEnergyApi {
@@ -17,7 +18,8 @@ function useBLE(): BluetoothLowEnergyApi {
 
   const [allDevices, setAllDevices] = useState<Device[]>([]);
   const [connectedDevice, setConnectedDevice] = useState<Device | null>(null);
-
+  const [bleServices, setBleServices] = useState<Service[]>([]);
+  console.log('Estos son los serivicios hallados, veamos su estructura... ' + bleServices)
   const requestAndroid31Permissions = async () => {
     const bluetoothScanPermission = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
@@ -81,14 +83,20 @@ function useBLE(): BluetoothLowEnergyApi {
     bleManager.onStateChange((state) => {
       if (state === State.PoweredOn) {
         bleManager.startDeviceScan(null, null, (error, device) => {
-        
           if (error) {
-            console.log('Error durante el escaneo:', error.errorCode, error.message);
+            console.log(
+              "Error durante el escaneo:",
+              error.errorCode,
+              error.message
+            );
             return;
           }
 
-          if (device) {
-            console.log("Esto es el serviceUUIDsr", device.serviceUUIDs);
+          if (device && allDevices.length >= 2) {
+            alert(
+              "Dispositivo conectado. Este es el serviceUUIDsr: " +
+                device.serviceUUIDs
+            );
             bleManager.stopDeviceScan();
             setAllDevices((prevState: Device[]) => {
               if (!isDuplicatedDevice(prevState, device)) {
@@ -96,15 +104,27 @@ function useBLE(): BluetoothLowEnergyApi {
               }
               return prevState;
             });
-
-           
-          }
+            device
+              .connect()
+              .then((device) => device.discoverAllServicesAndCharacteristics())
+              .then((device) => {
+                return device.services();
+              })
+              .then((services) =>{
+                setBleServices((prev: Service[]) => [...prev, ...services])
+                alert('Look at this: ' + bleServices);
+              }
+              )
+              .catch(
+                (error) =>
+                  `Error en servicios y características: ${error.message}`
+              );
+          } else return [...allDevices];
         });
       } else {
-        console.log('El estado del BLE no está encendido:', state);
+        console.log("El estado del BLE no está encendido:", state);
       }
     }, true);
- 
   };
 
   const isDuplicatedDevice = (devices: Device[], nextDevice: Device) =>
@@ -141,6 +161,7 @@ function useBLE(): BluetoothLowEnergyApi {
     allDevices,
     connectedDevice,
     disconnectFromDevice,
+    bleServices,
   };
 }
 

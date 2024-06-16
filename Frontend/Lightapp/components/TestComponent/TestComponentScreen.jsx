@@ -12,6 +12,7 @@ const TestComponentScreen = () => {
   const [dataToSend, setDataToSend] = useState(null);
 
   const getSerialNumber = () => {
+  
     axios.post(URLCOMMUNICATION, state)
       .then(response => {   
         const message = response.data.message;
@@ -34,7 +35,8 @@ const TestComponentScreen = () => {
         }
       })
       .catch(error => {
-        alert('Error', 'Hubo un error al crear el post');
+        console.log(error)
+        alert(error, 'Hubo un error al crear el post');
       });
   };
 
