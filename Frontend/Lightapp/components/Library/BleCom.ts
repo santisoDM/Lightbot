@@ -19,7 +19,7 @@ function useBLE(): BluetoothLowEnergyApi {
   const [allDevices, setAllDevices] = useState<Device[]>([]);
   const [connectedDevice, setConnectedDevice] = useState<Device | null>(null);
   const [bleServices, setBleServices] = useState<Service[]>([]);
-  console.log('Estos son los serivicios hallados, veamos su estructura... ' + bleServices)
+  console.log('Estos son los servicios hallados, veamos su estructura... ' + bleServices)
   const requestAndroid31Permissions = async () => {
     const bluetoothScanPermission = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
@@ -92,9 +92,9 @@ function useBLE(): BluetoothLowEnergyApi {
             return;
           }
 
-          if (device && allDevices.length >= 2) {
+          if (device && allDevices.length <= 2) {
             alert(
-              "Dispositivo conectado. Este es el serviceUUIDsr: " +
+              "Dispositivo conectado. Este es el serviceUUIDs: " +
                 device.serviceUUIDs
             );
             bleManager.stopDeviceScan();
@@ -129,7 +129,7 @@ function useBLE(): BluetoothLowEnergyApi {
 
   const isDuplicatedDevice = (devices: Device[], nextDevice: Device) =>
     devices.findIndex((device) => nextDevice.id === device.id) > -1;
-
+//Esto lo podemos reciclar mas adelante, pero primero probemos si hay fallas en el connect con la promesa.
   const connectToDevice = async (device: Device) => {
     try {
       const deviceConnection = await bleManager.connectToDevice(device.id);
@@ -140,7 +140,7 @@ function useBLE(): BluetoothLowEnergyApi {
       console.log("FALLÓ LA CONEXIÓN", e);
     }
   };
-
+// Esto puede ir en un botón o activarse en un componentWillUnmount(Return de useEffect)
   const disconnectFromDevice = () => {
     if (connectedDevice) {
       bleManager.cancelDeviceConnection(connectedDevice.id);
