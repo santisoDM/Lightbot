@@ -1,45 +1,94 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { View, Button, StyleSheet, ScrollView, TextInput, Text } from 'react-native';
+import React, { useEffect, useState, useRef } from "react";
+import {
+  View,
+  Button,
+  StyleSheet,
+  ScrollView,
+  TextInput,
+  Text,
+  Dimensions,
+} from "react-native";
 
-import Commands from '@/constants/Commands';
+import Commands from "@/constants/Commands";
 
 // Imports Network Commands
-import querySSID from '../Library/Network commands/SSID Query/SSIDQuery';
-import turnBluetoothOff from '../Library/Network commands/Bluetooth Off/BluetoothOff';
-import turnBluetoothOn from '../Library/Network commands/Bluetooth On/BluetoothOn';
-import queryMyIP from '../Library/Network commands/My Ip Query/myIpQuery';
-import configurePassword from '../Library/Network commands/Password Config/passwordConfig';
-import queryPassword from '../Library/Network commands/Password Query/passwordQuery';
-import resetWifi from '../Library/Network commands/Reset Wifi/ResetWifi';
-import configureSSID from '../Library/Network commands/SSID Config/configureSSID';
+import querySSID from "../Library/Network commands/SSID Query/SSIDQuery";
+import turnBluetoothOff from "../Library/Network commands/Bluetooth Off/BluetoothOff";
+import turnBluetoothOn from "../Library/Network commands/Bluetooth On/BluetoothOn";
+import queryMyIP from "../Library/Network commands/My Ip Query/myIpQuery";
+import configurePassword from "../Library/Network commands/Password Config/passwordConfig";
+import queryPassword from "../Library/Network commands/Password Query/passwordQuery";
+import resetWifi from "../Library/Network commands/Reset Wifi/ResetWifi";
+import configureSSID from "../Library/Network commands/SSID Config/configureSSID";
 // Imports Scene and Positions Commands
-import incrementDecrementPositions from '../Library/Scene and positions commands/Increment-Decrement Positions/incrementDecrementPositions';
-import loadPage from '../Library/Scene and positions commands/Load Page/loadPage';
-import savePage from '../Library/Scene and positions commands/Save Page/savePage';
-import saveScene from '../Library/Scene and positions commands/Save Scene/saveScene';
-import loadScene from '../Library/Scene and positions commands/Load Scene/loadScene';
-import stopScene from '../Library/Scene and positions commands/Stop Scene/stopScene';
-import setSpeed from '../Library/Scene and positions commands/Set Speed/setSpeed';
-import setDelay from '../Library/Scene and positions commands/Set Delay/setDelay';
-import runPositions from '../Library/Scene and positions commands/Run Positions/runPositions';
+import incrementDecrementPositions from "../Library/Scene and positions commands/Increment-Decrement Positions/incrementDecrementPositions";
+import loadPage from "../Library/Scene and positions commands/Load Page/loadPage";
+import savePage from "../Library/Scene and positions commands/Save Page/savePage";
+import saveScene from "../Library/Scene and positions commands/Save Scene/saveScene";
+import loadScene from "../Library/Scene and positions commands/Load Scene/loadScene";
+import stopScene from "../Library/Scene and positions commands/Stop Scene/stopScene";
+import setSpeed from "../Library/Scene and positions commands/Set Speed/setSpeed";
+import setDelay from "../Library/Scene and positions commands/Set Delay/setDelay";
+import runPositions from "../Library/Scene and positions commands/Run Positions/runPositions";
+import useBle from "../Library/BleCom";
 
-const TestComponent = ({ state, getMinibotData, getSerialNumber, dataObtained }) => {
+const TestComponent = ({
+  state,
+  getMinibotData,
+  getSerialNumber,
+  dataObtained,
+}) => {
   const [aviso, setAviso] = useState(null);
+  const [alerta, setAlerta] = useState(null);
+  const [bleInfo, setBleInfo] = useState([]);
   const [inputs, setInputs] = useState({
-    SSID: 'WiFi_Fibertel_jru_2.4GHz',
-    PASS: 'xnr4mjdcxr',
-    RUNPOS: { arg1: 1800, arg2: 1, arg3: 900, arg4: 1, arg5: 2, arg6: 1000, arg7: 10, arg8: 0, arg9: 0 },
-    INCDEC: { arg1: 1, arg2: 30, arg3: 5, arg4: 1, arg5: 20, arg6: 10, arg7: 0, arg8: 50, arg9: 8 },
+    SSID: "WiFi_Fibertel_jru_2.4GHz",
+    PASS: "xnr4mjdcxr",
+    RUNPOS: {
+      arg1: 1800,
+      arg2: 1,
+      arg3: 900,
+      arg4: 1,
+      arg5: 2,
+      arg6: 1000,
+      arg7: 10,
+      arg8: 0,
+      arg9: 0,
+    },
+    INCDEC: {
+      arg1: 1,
+      arg2: 30,
+      arg3: 5,
+      arg4: 1,
+      arg5: 20,
+      arg6: 10,
+      arg7: 0,
+      arg8: 50,
+      arg9: 8,
+    },
     SAVEPAGE: { page: 1, otherArg: 10 },
     LOADPAGE: 1,
     SAVESCENE: { scene: 1, arg1: 1, arg2: 3 },
     LOADSCENE: { scene: 1, arg1: 1 },
     SETSPEED: 1,
-    SETDELAY: 10
+    SETDELAY: 10,
   });
 
+  //Para lo de Ble
+  const { scanForPeripherals, requestPermissions } = useBle();
+
+  const scanDevicesXD = async () => {
+    const isAllowed = await requestPermissions();
+
+    if (isAllowed) {
+      setAlerta(scanForPeripherals());
+      const answer = scanForPeripherals();
+      answer ? setBleInfo(answer) : setBleInfo("No hubo respuesta aparente");
+    }
+  };
+
   const scrollViewRef = useRef();
-console.log(inputs.INCDEC)
+
   const handleInputChange = (command, value, field) => {
     if (field) {
       setInputs((prevInputs) => ({
@@ -59,59 +108,75 @@ console.log(inputs.INCDEC)
 
   const handlePress = (command) => {
     switch (command) {
-      case 'SSID':
+      case "SSID":
         setAviso(configureSSID(state.serial, inputs.SSID));
         break;
-      case 'PASS':
+      case "PASS":
         setAviso(configurePassword(state.serial, inputs.PASS));
         break;
-      case 'RUNPOS':
+      case "RUNPOS":
         setAviso(runPositions(state.serial, ...Object.values(inputs.RUNPOS)));
         break;
-      case 'INCDEC':
-        setAviso(incrementDecrementPositions(state.serial, ...Object.values(inputs.INCDEC)));
+      case "INCDEC":
+        setAviso(
+          incrementDecrementPositions(
+            state.serial,
+            ...Object.values(inputs.INCDEC)
+          )
+        );
         break;
-      case 'SAVEPAGE':
-        setAviso(savePage(state.serial, inputs.SAVEPAGE.page, inputs.SAVEPAGE.otherArg));
+      case "SAVEPAGE":
+        setAviso(
+          savePage(state.serial, inputs.SAVEPAGE.page, inputs.SAVEPAGE.otherArg)
+        );
         break;
-      case 'LOADPAGE':
+      case "LOADPAGE":
         setAviso(loadPage(state.serial, inputs.LOADPAGE));
         break;
-      case 'SAVESCENE':
-        setAviso(saveScene(state.serial, inputs.SAVESCENE.scene, inputs.SAVESCENE.arg1, inputs.SAVESCENE.arg2));
+      case "SAVESCENE":
+        setAviso(
+          saveScene(
+            state.serial,
+            inputs.SAVESCENE.scene,
+            inputs.SAVESCENE.arg1,
+            inputs.SAVESCENE.arg2
+          )
+        );
         break;
-      case 'LOADSCENE':
-        setAviso(loadScene(state.serial, inputs.LOADSCENE.scene, inputs.LOADSCENE.arg1));
+      case "LOADSCENE":
+        setAviso(
+          loadScene(state.serial, inputs.LOADSCENE.scene, inputs.LOADSCENE.arg1)
+        );
         break;
-      case 'SETSPEED':
+      case "SETSPEED":
         setAviso(setSpeed(state.serial, inputs.SETSPEED));
         break;
-      case 'SETDELAY':
+      case "SETDELAY":
         setAviso(setDelay(state.serial, inputs.SETDELAY));
         break;
-      case 'SSID?':
+      case "SSID?":
         setAviso(querySSID(state.serial));
         break;
-      case 'PASS?':
+      case "PASS?":
         setAviso(queryPassword(state.serial));
         break;
-      case 'BLEON':
+      case "BLEON":
         setAviso(turnBluetoothOn(state.serial));
         break;
-      case 'BLEOFF':
+      case "BLEOFF":
         setAviso(turnBluetoothOff(state.serial));
         break;
-      case 'RESETWIFI':
+      case "RESETWIFI":
         setAviso(resetWifi(state.serial));
         break;
-      case 'MYIP':
+      case "MYIP":
         setAviso(queryMyIP(state.serial));
         break;
-        case 'STOPSCENE':
-          setAviso(stopScene(state.serial));          
-          break;
+      case "STOPSCENE":
+        setAviso(stopScene(state.serial));
+        break;
       default:
-        console.log('Comando no reconocido');
+        console.log("Comando no reconocido");
     }
 
     // Scroll to the "Comando enviado" section
@@ -131,233 +196,327 @@ console.log(inputs.INCDEC)
     <ScrollView contentContainerStyle={styles.container} ref={scrollViewRef}>
       <View style={styles.connectButtonContainer}>
         <Button title="Conectar con el dispositivo" onPress={getSerialNumber} />
+        <Button title="Buscar dispositivo Ble" onPress={scanDevicesXD} />
+      </View>
+      <View>
+        {typeof bleInfo[0] == "string" ? (
+          bleInfo.map((devices) => (
+            <View>
+              <Text>
+                Device Name: {devices.name ? devices.name : devices.localName}
+              </Text>
+              <Text>Device ID: {devices.id}</Text>
+              <Text>Device UUID: {devices.uuid}</Text>
+              <Text>Device Connected State: {devices.isConnected}</Text>
+            </View>
+          ))
+        ) : (
+          <View>
+            <Text>{bleInfo}</Text>
+          </View>
+        )}
       </View>
       <View style={styles.commandsContainer}>
         {Commands.map((cmd, index) => (
           <View style={styles.command} key={index}>
-            <Button title={cmd.label} onPress={() => handlePress(cmd.command)} />
-            {cmd.command === 'SSID' && (
+            <Button
+              title={cmd.label}
+              onPress={() => handlePress(cmd.command)}
+            />
+            {cmd.command === "SSID" && (
               <TextInput
                 style={styles.input}
                 placeholder="SSID"
                 value={inputs.SSID}
-                onChangeText={(text) => handleInputChange('SSID', text)}
+                onChangeText={(text) => handleInputChange("SSID", text)}
               />
             )}
-            {cmd.command === 'PASS' && (
+            {cmd.command === "PASS" && (
               <TextInput
                 style={styles.input}
                 placeholder="Password"
                 value={inputs.PASS}
-                onChangeText={(text) => handleInputChange('PASS', text)}
+                onChangeText={(text) => handleInputChange("PASS", text)}
               />
             )}
-            {cmd.command === 'RUNPOS' && (
-              <>
+            {cmd.command === "RUNPOS" && (
+              <View style={styles.inputContainer}>
                 <TextInput
                   style={styles.input}
                   placeholder="arg1"
-                  value={inputs.RUNPOS.arg1}
-                  onChangeText={(text) => handleInputChange('RUNPOS', Number(text), 'arg1')}
+                  value={inputs.RUNPOS.arg1.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("RUNPOS", Number(text), "arg1")
+                  }
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg2"
-                  value={inputs.RUNPOS.arg2}
-                  onChangeText={(text) => handleInputChange('RUNPOS', Number(text), 'arg2')}
+                  value={inputs.RUNPOS.arg2.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("RUNPOS", Number(text), "arg2")
+                  }
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg3"
-                  value={inputs.RUNPOS.arg3}
-                  onChangeText={(text) => handleInputChange('RUNPOS', Number(text), 'arg3')}
+                  value={inputs.RUNPOS.arg3.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("RUNPOS", Number(text), "arg3")
+                  }
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg4"
-                  value={inputs.RUNPOS.arg4}
-                  onChangeText={(text) => handleInputChange('RUNPOS', Number(text), 'arg4')}
+                  value={inputs.RUNPOS.arg4.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("RUNPOS", Number(text), "arg4")
+                  }
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg5"
-                  value={inputs.RUNPOS.arg5}
-                  onChangeText={(text) => handleInputChange('RUNPOS', Number(text), 'arg5')}
+                  value={inputs.RUNPOS.arg5.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("RUNPOS", Number(text), "arg5")
+                  }
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg6"
-                  value={inputs.RUNPOS.arg6}
-                  onChangeText={(text) => handleInputChange('RUNPOS', Number(text), 'arg6')}
+                  value={inputs.RUNPOS.arg6.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("RUNPOS", Number(text), "arg6")
+                  }
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg7"
-                  value={inputs.RUNPOS.arg7}
-                  onChangeText={(text) => handleInputChange('RUNPOS', Number(text), 'arg7')}
+                  value={inputs.RUNPOS.arg7.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("RUNPOS", Number(text), "arg7")
+                  }
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg8"
-                  value={inputs.RUNPOS.arg8}
-                  onChangeText={(text) => handleInputChange('RUNPOS', Number(text), 'arg8')}
+                  value={inputs.RUNPOS.arg8.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("RUNPOS", Number(text), "arg8")
+                  }
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg9"
-                  value={inputs.RUNPOS.arg9}
-                  onChangeText={(text) => handleInputChange('RUNPOS', Number(text), 'arg9')}
+                  value={inputs.RUNPOS.arg9.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("RUNPOS", Number(text), "arg9")
+                  }
                 />
-              </>
+              </View>
             )}
-            {cmd.command === 'INCDEC' && (
-              <>
+            {cmd.command === "INCDEC" && (
+              <View style={styles.inputContainer}>
                 <TextInput
                   style={styles.input}
                   placeholder="arg1"
-                  value={inputs.INCDEC.arg1}
-                  onChangeText={(text) => handleInputChange('INCDEC', Number(text), 'arg1')}
+                  value={inputs.INCDEC.arg1.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("INCDEC", Number(text), "arg1")
+                  }
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg2"
-                  value={inputs.INCDEC.arg2}
-                  onChangeText={(text) => handleInputChange('INCDEC', Number(text), 'arg2')}
+                  value={inputs.INCDEC.arg2.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("INCDEC", Number(text), "arg2")
+                  }
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg3"
-                  value={inputs.INCDEC.arg3}
-                  onChangeText={(text) => handleInputChange('INCDEC', Number(text), 'arg3')}
+                  value={inputs.INCDEC.arg3.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("INCDEC", Number(text), "arg3")
+                  }
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg4"
-                  value={inputs.INCDEC.arg4}
-                  onChangeText={(text) => handleInputChange('INCDEC', Number(text), 'arg4')}
+                  value={inputs.INCDEC.arg4.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("INCDEC", Number(text), "arg4")
+                  }
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg5"
-                  value={inputs.INCDEC.arg5}
-                  onChangeText={(text) => handleInputChange('INCDEC', Number(text), 'arg5')}
+                  value={inputs.INCDEC.arg5.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("INCDEC", Number(text), "arg5")
+                  }
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg6"
-                  value={inputs.INCDEC.arg6}
-                  onChangeText={(text) => handleInputChange('INCDEC', Number(text), 'arg6')}
+                  value={inputs.INCDEC.arg6.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("INCDEC", Number(text), "arg6")
+                  }
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg7"
-                  value={inputs.INCDEC.arg7}
-                  onChangeText={(text) => handleInputChange('INCDEC', Number(text), 'arg7')}
+                  value={inputs.INCDEC.arg7.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("INCDEC", Number(text), "arg7")
+                  }
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg8"
-                  value={inputs.INCDEC.arg8}
-                  onChangeText={(text) => handleInputChange('INCDEC', Number(text), 'arg8')}
+                  value={inputs.INCDEC.arg8.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("INCDEC", Number(text), "arg8")
+                  }
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="arg9"
-                  value={inputs.INCDEC.arg9}
-                  onChangeText={(text) => handleInputChange('INCDEC', Number(text), 'arg9')}
+                  value={inputs.INCDEC.arg9.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("INCDEC", Number(text), "arg9")
+                  }
                 />
-              </>
+              </View>
             )}
-            {cmd.command === 'SAVEPAGE' && (
-              <>
+            {cmd.command === "SAVEPAGE" && (
+              <View style={styles.inputContainer}>
                 <TextInput
                   style={styles.input}
                   placeholder="Page"
-                  value={inputs.SAVEPAGE.page}
-                  onChangeText={(text) => handleInputChange('SAVEPAGE', Number(text), 'page')}
+                  value={inputs.SAVEPAGE.page.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("SAVEPAGE", Number(text), "page")
+                  }
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="Other Arg"
-                  value={inputs.SAVEPAGE.otherArg}
-                  onChangeText={(text) => handleInputChange('SAVEPAGE', Number(text), 'otherArg')}
+                  value={inputs.SAVEPAGE.otherArg.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("SAVEPAGE", Number(text), "otherArg")
+                  }
                 />
-              </>
+              </View>
             )}
-            {cmd.command === 'LOADPAGE' && (
+            {cmd.command === "LOADPAGE" && (
               <TextInput
                 style={styles.input}
                 placeholder="Page"
-                value={inputs.LOADPAGE}
-                onChangeText={(text) => handleInputChange('LOADPAGE', Number(text))}
+                value={inputs.LOADPAGE.toString()}
+                onChangeText={(text) =>
+                  handleInputChange("LOADPAGE", Number(text))
+                }
               />
             )}
-            {cmd.command === 'SAVESCENE' && (
-              <>
+            {cmd.command === "SAVESCENE" && (
+              <View style={styles.inputContainer}>
                 <TextInput
                   style={styles.input}
                   placeholder="Scene"
-                  value={inputs.SAVESCENE.scene}
-                  onChangeText={(text) => handleInputChange('SAVESCENE', Number(text), 'scene')}
+                  value={inputs.SAVESCENE.scene.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("SAVESCENE", Number(text), "scene")
+                  }
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="Arg1"
-                  value={inputs.SAVESCENE.arg1}
-                  onChangeText={(text) => handleInputChange('SAVESCENE', Number(text), 'arg1')}
+                  value={inputs.SAVESCENE.arg1.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("SAVESCENE", Number(text), "arg1")
+                  }
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="Arg2"
-                  value={inputs.SAVESCENE.arg2}
-                  onChangeText={(text) => handleInputChange('SAVESCENE', Number(text), 'arg2')}
+                  value={inputs.SAVESCENE.arg2.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("SAVESCENE", Number(text), "arg2")
+                  }
                 />
-              </>
+              </View>
             )}
-            {cmd.command === 'LOADSCENE' && (
-              <>
+            {cmd.command === "LOADSCENE" && (
+              <View style={styles.inputContainer}>
                 <TextInput
                   style={styles.input}
                   placeholder="Scene"
-                  value={inputs.LOADSCENE.scene}
-                  onChangeText={(text) => handleInputChange('LOADSCENE', Number(text), 'scene')}
+                  value={inputs.LOADSCENE.scene.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("LOADSCENE", Number(text), "scene")
+                  }
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="Arg1"
-                  value={inputs.LOADSCENE.arg1}
-                  onChangeText={(text) => handleInputChange('LOADSCENE', Number(text), 'arg1')}
+                  value={inputs.LOADSCENE.arg1.toString()}
+                  onChangeText={(text) =>
+                    handleInputChange("LOADSCENE", Number(text), "arg1")
+                  }
                 />
-              </>
+              </View>
             )}
-            {cmd.command === 'SETSPEED' && (
+            {cmd.command === "SETSPEED" && (
               <TextInput
                 style={styles.input}
                 placeholder="Speed"
-                value={inputs.SETSPEED}
-                onChangeText={(text) => handleInputChange('SETSPEED', Number(text))}
+                value={inputs.SETSPEED.toString()}
+                onChangeText={(text) =>
+                  handleInputChange("SETSPEED", Number(text))
+                }
               />
             )}
-            {cmd.command === 'SETDELAY' && (
+            {cmd.command === "SETDELAY" && (
               <TextInput
                 style={styles.input}
                 placeholder="Delay"
-                value={inputs.SETDELAY}
-                onChangeText={(text) => handleInputChange('SETDELAY', Number(text))}
+                value={inputs.SETDELAY.toString()}
+                onChangeText={(text) =>
+                  handleInputChange("SETDELAY", Number(text))
+                }
               />
             )}
           </View>
         ))}
       </View>
-      <View>
+      <View style={styles.textContainer}>
         <Text style={styles.text}>Comando enviado</Text>
-        {!aviso ? '' : <Text style={styles.text}>{aviso}</Text>}
-        {state ? <Text style={styles.text}>Comando recibido: {JSON.stringify(state.message)}</Text> : null}
-        <Text style={styles.text}>Serial Number: {state.serial}</Text>
+        {!aviso ? (
+          ""
+        ) : (
+          <ScrollView horizontal>
+            <Text style={styles.text}>{aviso}</Text>
+          </ScrollView>
+        )}
+        {state ? (
+          <ScrollView horizontal>
+            <Text style={styles.text}>
+              Comando recibido: {JSON.stringify(state.message)}
+            </Text>
+          </ScrollView>
+        ) : null}
+        <ScrollView horizontal>
+          <Text style={styles.text}>Serial Number: {state.serial}</Text>
+        </ScrollView>
       </View>
     </ScrollView>
   );
 };
+
+const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
@@ -365,25 +524,29 @@ const styles = StyleSheet.create({
   },
   connectButtonContainer: {
     marginVertical: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   commandsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between", // Adjusted to space-between to ensure two columns
   },
   command: {
-    width: '45%',
+    width: width / 2 - 20, // Ensure buttons are within screen bounds
     margin: 5,
     padding: 10,
     borderWidth: 1,
     borderRadius: 5,
-    borderColor: '#ccc',
-    backgroundColor: '#f9f9f9',
+    borderColor: "#ccc",
+    backgroundColor: "#f9f9f9",
+  },
+  inputContainer: {
+    flexDirection: "column", // Ensure inputs are stacked vertically
+    marginVertical: 5,
   },
   input: {
     height: 40,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderWidth: 1,
     borderRadius: 5,
     marginVertical: 5,
@@ -391,10 +554,19 @@ const styles = StyleSheet.create({
   },
   text: {
     marginTop: 20,
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#333',
+    fontSize: 14,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "#333",
+    backgroundColor: "#fff", // Add background color
+    padding: 5, // Add padding for better visibility
+  },
+  textContainer: {
+    width: width,
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 20,
+    backgroundColor: "#fff", // Add background color
   },
 });
 
