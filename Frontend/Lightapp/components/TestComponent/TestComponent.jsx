@@ -39,7 +39,7 @@ const TestComponent = ({
   dataObtained,
 }) => {
   const [aviso, setAviso] = useState(null);
-  const [alerta, setAlerta] = useState(null);
+  //const [alerta, setAlerta] = useState(null);
   const [bleInfo, setBleInfo] = useState([]);
   const [inputs, setInputs] = useState({
     SSID: "WiFi_Fibertel_jru_2.4GHz",
@@ -81,9 +81,8 @@ const TestComponent = ({
     const isAllowed = await requestPermissions();
 
     if (isAllowed) {
-      setAlerta(scanForPeripherals());
       const answer = scanForPeripherals();
-      answer ? setBleInfo(answer) : setBleInfo("No hubo respuesta aparente");
+      answer ? setBleInfo([...answer]) : setBleInfo("No hubo respuesta aparente");
     }
   };
 
@@ -199,15 +198,15 @@ const TestComponent = ({
         <Button title="Buscar dispositivo Ble" onPress={scanDevicesXD} />
       </View>
       <View>
-        {typeof bleInfo[0] == "string" ? (
+        {typeof bleInfo[0] != "string" ? (
           bleInfo.map((devices) => (
             <View>
               <Text>
-                Device Name: {devices.name ? devices.name : devices.localName}
+                Device Name: {devices?.name ? devices?.name : devices?.localName}
               </Text>
-              <Text>Device ID: {devices.id}</Text>
-              <Text>Device UUID: {devices.uuid}</Text>
-              <Text>Device Connected State: {devices.isConnected}</Text>
+              <Text>Device ID: {devices?.id}</Text>
+              <Text>Device Connected State: {devices?.isConnected}</Text>
+              <Text>Device RSSI: {devices?.rssi}</Text>
             </View>
           ))
         ) : (

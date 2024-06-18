@@ -82,7 +82,7 @@ function useBLE(): BluetoothLowEnergyApi {
 
     bleManager.onStateChange((state) => {
       if (state === State.PoweredOn) {
-        bleManager.startDeviceScan(null, null, (error, device) => {
+        bleManager.startDeviceScan(null, null, async(error, device) => {
           if (error) {
             console.log(
               "Error durante el escaneo:",
@@ -92,34 +92,24 @@ function useBLE(): BluetoothLowEnergyApi {
             return;
           }
 
-          if (device && allDevices.length <= 2) {
+          if (device) {
             alert(
               "Dispositivo conectado. Este es el serviceUUIDs: " +
                 device.serviceUUIDs
             );
-            bleManager.stopDeviceScan();
             setAllDevices((prevState: Device[]) => {
               if (!isDuplicatedDevice(prevState, device)) {
+                console.log('Theres no duplicates')
                 return [...prevState, device];
               }
+              console.log('There was a duplicate');
               return prevState;
             });
-            device
-              .connect()
-              .then((device) => device.discoverAllServicesAndCharacteristics())
-              .then((device) => {
-                return device.services();
-              })
-              .then((services) =>{
-                setBleServices((prev: Service[]) => [...prev, ...services])
-                alert('Look at this: ' + bleServices);
-              }
-              )
-              .catch(
-                (error) =>
-                  `Error en servicios y características: ${error.message}`
-              );
-          } else return [...allDevices];
+
+            if(allDevices.length>=2) bleManager.stopDeviceScan();
+            return allDevices;
+
+          } else alert('Im sorry, theres no device in the scanning process: The device ' + device + ' and the possible error: '+ error);
         });
       } else {
         console.log("El estado del BLE no está encendido:", state);
