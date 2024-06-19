@@ -10,7 +10,8 @@ const loadScene = (serialNumber, sceneNumber, playLoop) => {
     throw new Error('Invalid parameters for loadScene');
   }
   paquete = `${serialNumber},LOADscene,${sceneNumber},${playLoop},\\r\\n`;
-  enviarComando(paquete);
+   // enviarComando(paquete);
+   console.log(paquete)
   return paquete;
 };
 

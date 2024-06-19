@@ -9,8 +9,10 @@ const incrementDecrementPositions = (serialNumber, panAction, panValue, panSpeed
   if (!validateIncrementDecrementPositions(serialNumber, panAction, panValue, panSpeed, tiltAction, tiltValue, tiltSpeed, lampAction, lampValue, lampSpeed)) {
     throw new Error('Invalid parameters for incrementDecrementPositions');
   }
+  
   paquete = `${serialNumber},INCDEC,${panAction},${panValue},${panSpeed},${tiltAction},${tiltValue},${tiltSpeed},${lampAction},${lampValue},${lampSpeed},\\r\\n`;
-  enviarComando(paquete);
+  //  enviarComando(paquete);
+   console.log(paquete)
   return paquete;
 };
 

@@ -1,0 +1,20 @@
+{
+    "build": {
+<<<<<<< HEAD
+        "development": {
+=======
+        "development":{
+>>>>>>> 366b581eb3176865e460002c3e9ead6881a6387d
+            "developmentClient": true,
+            "distribution": "internal"
+        },
+        "preview": {
+            "distribution": "internal"
+<<<<<<< HEAD
+=======
+           
+>>>>>>> 366b581eb3176865e460002c3e9ead6881a6387d
+        },
+        "production": {}
+    }
+}
