@@ -27,6 +27,11 @@
       "permissions": [
         "android.permission.BLUETOOTH",
         "android.permission.BLUETOOTH_ADMIN",
+<<<<<<< HEAD
+        "android.permission.BLUETOOTH_CONNECT"
+      ],
+      "package": "com.Lightbot"
+=======
         "android.permission.BLUETOOTH_ADVERTISE",
         "android.permission.BLUETOOTH_SCAN",
         "android.permission.BLUETOOTH_CONNECT",
@@ -35,6 +40,7 @@
       ],
       "package": "com.anonymous.Lightapp",
       "minSdkVersion": 21
+>>>>>>> 366b581eb3176865e460002c3e9ead6881a6387d
     },
     "web": {
       "bundler": "metro",
@@ -42,6 +48,20 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+<<<<<<< HEAD
+      [
+        "@config-plugins/react-native-ble-plx",
+        {
+          "isBackgroundEnabled": true,
+          "modes": [
+            "peripheral",
+            "central"
+          ],
+          "bluetoothAlwaysPermission": "Allow $(PRODUCT_NAME) to connect to bluetooth devices"
+        }
+      ],
+      "expo-router"
+=======
       "expo-router",
       [
         "react-native-permissions",
@@ -79,6 +99,7 @@
           }
         }
       ]
+>>>>>>> 366b581eb3176865e460002c3e9ead6881a6387d
     ],
     "experiments": {
       "typedRoutes": true

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { PermissionsAndroid, Platform } from "react-native";
-import { BleManager, Device, State } from "react-native-ble-plx";
+import { Alert, PermissionsAndroid, Platform } from "react-native";
+import { BleManager, Device, State, Service } from "react-native-ble-plx";
 import * as ExpoDevice from "expo-device";
 
 interface BluetoothLowEnergyApi {
@@ -10,6 +10,7 @@ interface BluetoothLowEnergyApi {
   disconnectFromDevice: () => void;
   connectedDevice: Device | null;
   allDevices: Device[];
+  bleServices: Service[];
 }
 
 function useBLE(): BluetoothLowEnergyApi {
@@ -17,7 +18,8 @@ function useBLE(): BluetoothLowEnergyApi {
 
   const [allDevices, setAllDevices] = useState<Device[]>([]);
   const [connectedDevice, setConnectedDevice] = useState<Device | null>(null);
-
+  const [bleServices, setBleServices] = useState<Service[]>([]);
+  console.log('Estos son los servicios hallados, veamos su estructura... ' + bleServices)
   const requestAndroid31Permissions = async () => {
     const bluetoothScanPermission = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
@@ -80,36 +82,44 @@ function useBLE(): BluetoothLowEnergyApi {
 
     bleManager.onStateChange((state) => {
       if (state === State.PoweredOn) {
-        bleManager.startDeviceScan(null, null, (error, device) => {
-        
+        bleManager.startDeviceScan(null, null, async(error, device) => {
           if (error) {
-            console.log('Error durante el escaneo:', error.errorCode, error.message);
+            console.log(
+              "Error durante el escaneo:",
+              error.errorCode,
+              error.message
+            );
             return;
           }
 
           if (device) {
-           alert("Dispositivo conectado. Este es el serviceUUIDsr: " + device.serviceUUIDs);
-            bleManager.stopDeviceScan();
+            alert(
+              "Dispositivo conectado. Este es el serviceUUIDs: " +
+                device.serviceUUIDs
+            );
             setAllDevices((prevState: Device[]) => {
               if (!isDuplicatedDevice(prevState, device)) {
+                console.log('Theres no duplicates')
                 return [...prevState, device];
               }
+              console.log('There was a duplicate');
               return prevState;
             });
 
-           
-          }
+            if(allDevices.length>=2) bleManager.stopDeviceScan();
+            return allDevices;
+
+          } else alert('Im sorry, theres no device in the scanning process: The device ' + device + ' and the possible error: '+ error);
         });
       } else {
-        console.log('El estado del BLE no está encendido:', state);
+        console.log("El estado del BLE no está encendido:", state);
       }
     }, true);
- 
   };
 
   const isDuplicatedDevice = (devices: Device[], nextDevice: Device) =>
     devices.findIndex((device) => nextDevice.id === device.id) > -1;
-
+//Esto lo podemos reciclar mas adelante, pero primero probemos si hay fallas en el connect con la promesa.
   const connectToDevice = async (device: Device) => {
     try {
       const deviceConnection = await bleManager.connectToDevice(device.id);
@@ -120,7 +130,7 @@ function useBLE(): BluetoothLowEnergyApi {
       console.log("FALLÓ LA CONEXIÓN", e);
     }
   };
-
+// Esto puede ir en un botón o activarse en un componentWillUnmount(Return de useEffect)
   const disconnectFromDevice = () => {
     if (connectedDevice) {
       bleManager.cancelDeviceConnection(connectedDevice.id);
@@ -141,6 +151,7 @@ function useBLE(): BluetoothLowEnergyApi {
     allDevices,
     connectedDevice,
     disconnectFromDevice,
+    bleServices,
   };
 }
 
