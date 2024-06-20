@@ -1,7 +1,7 @@
 // Función para validar los parámetros de runPositions
 const validateRunPositions = (serialNumber, panPosition, panSpeed, tiltPosition, tiltSpeed, lampBrightness, lampSpeed, strobe, delay) => {
   // Verificar que serialNumber sea un número positivo de 10 dígitos
-  const isSerialNumberValid = /^\d{10}$/.test(serialNumber);
+  const isSerialNumberValid = /^\d{20}$/.test(serialNumber);
 
   
 
