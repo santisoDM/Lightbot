@@ -46,6 +46,7 @@ export default ({ config }) => {
       },
       plugins: [
         "expo-router",
+        "expo-sensors",
         [
           "react-native-permissions",
           {

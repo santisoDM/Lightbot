@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Button, StyleSheet, ScrollView, TextInput, Text, Dimensions } from 'react-native';
+import { View, Button, StyleSheet, ScrollView, TextInput, Text } from 'react-native';
 
 import Commands from '@/constants/Commands';
 
@@ -24,8 +24,11 @@ import setDelay from '../Library/Scene and positions commands/Set Delay/setDelay
 import runPositions from '../Library/Scene and positions commands/Run Positions/runPositions';
 import useBle from "../Library/BleCom";
 
+import Joystick from "@/components/Library/Joystick/joystickController"
+
 const TestComponent = ({ state, getMinibotData, getSerialNumber, dataObtained }) => {
   const [aviso, setAviso] = useState(null);
+  const [alerta, setAlerta] = useState(null);
   const [inputs, setInputs] = useState({
     SSID: 'WiFi_Fibertel_jru_2.4GHz',
     PASS: 'xnr4mjdcxr',
@@ -39,24 +42,20 @@ const TestComponent = ({ state, getMinibotData, getSerialNumber, dataObtained })
     SETDELAY: 10
   });
 
+  const [isJoystickVisible, setJoystickVisible] = useState(false);
+
   //Para lo de Ble
   const {
     scanForPeripherals, requestPermissions 
-  }= useBle();
+  } = useBle();
 
-  const scanDevicesXD= async()=> {
+  const scanDevicesXD = async () => {
     const isAllowed = await requestPermissions();
-  
-// let alerta;
-    if(isAllowed)  {
-      
-      scanForPeripherals()
-    //   alerta = scanForPeripherals()
-    
-    // alert(JSON.stringify(alerta))
-    };
-  }
 
+    if (isAllowed) {
+      setAlerta(scanForPeripherals());
+    }
+  };
 
   const scrollViewRef = useRef();
 
@@ -127,9 +126,9 @@ const TestComponent = ({ state, getMinibotData, getSerialNumber, dataObtained })
       case 'MYIP':
         setAviso(queryMyIP(state.serial));
         break;
-        case 'STOPSCENE':
-          setAviso(stopScene(state.serial));          
-          break;
+      case 'STOPSCENE':
+        setAviso(stopScene(state.serial));
+        break;
       default:
         console.log('Comando no reconocido');
     }
@@ -289,155 +288,66 @@ const TestComponent = ({ state, getMinibotData, getSerialNumber, dataObtained })
                 />
               </View>
             )}
-            {cmd.command === 'SAVEPAGE' && (
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Page"
-                  value={inputs.SAVEPAGE.page.toString()}
-                  onChangeText={(text) => handleInputChange('SAVEPAGE', Number(text), 'page')}
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Other Arg"
-                  value={inputs.SAVEPAGE.otherArg.toString()}
-                  onChangeText={(text) => handleInputChange('SAVEPAGE', Number(text), 'otherArg')}
-                />
+            {(cmd.command === 'RUNPOS' || cmd.command === 'INCDEC') && (
+              <View style={styles.joystickButtonContainer}>
+             { isJoystickVisible ?   <Button title="Esconder Joystick" onPress={() => setJoystickVisible(!isJoystickVisible)} /> :  <Button title="Mostrar Joystick" onPress={() => setJoystickVisible(!isJoystickVisible)} />  }
+                {isJoystickVisible && (
+                  <View style={styles.joystickContainer}>
+                    <Joystick onMove={(event) => console.log(event)} />
+                  </View>
+                )}
               </View>
-            )}
-            {cmd.command === 'LOADPAGE' && (
-              <TextInput
-                style={styles.input}
-                placeholder="Page"
-                value={inputs.LOADPAGE.toString()}
-                onChangeText={(text) => handleInputChange('LOADPAGE', Number(text))}
-              />
-            )}
-            {cmd.command === 'SAVESCENE' && (
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Scene"
-                  value={inputs.SAVESCENE.scene.toString()}
-                  onChangeText={(text) => handleInputChange('SAVESCENE', Number(text), 'scene')}
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Arg1"
-                  value={inputs.SAVESCENE.arg1.toString()}
-                  onChangeText={(text) => handleInputChange('SAVESCENE', Number(text), 'arg1')}
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Arg2"
-                  value={inputs.SAVESCENE.arg2.toString()}
-                  onChangeText={(text) => handleInputChange('SAVESCENE', Number(text), 'arg2')}
-                />
-              </View>
-            )}
-            {cmd.command === 'LOADSCENE' && (
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Scene"
-                  value={inputs.LOADSCENE.scene.toString()}
-                  onChangeText={(text) => handleInputChange('LOADSCENE', Number(text), 'scene')}
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Arg1"
-                  value={inputs.LOADSCENE.arg1.toString()}
-                  onChangeText={(text) => handleInputChange('LOADSCENE', Number(text), 'arg1')}
-                />
-              </View>
-            )}
-            {cmd.command === 'SETSPEED' && (
-              <TextInput
-                style={styles.input}
-                placeholder="Speed"
-                value={inputs.SETSPEED.toString()}
-                onChangeText={(text) => handleInputChange('SETSPEED', Number(text))}
-              />
-            )}
-            {cmd.command === 'SETDELAY' && (
-              <TextInput
-                style={styles.input}
-                placeholder="Delay"
-                value={inputs.SETDELAY.toString()}
-                onChangeText={(text) => handleInputChange('SETDELAY', Number(text))}
-              />
             )}
           </View>
         ))}
       </View>
-      <View style={styles.textContainer}>
-  <Text style={styles.text}>Comando enviado</Text>
-  {!aviso ? '' : (
-    <ScrollView horizontal>
-      <Text style={styles.text}>{aviso}</Text>
-    </ScrollView>
-  )}
-  {state ? (
-    <ScrollView horizontal>
-      <Text style={styles.text}>Comando recibido: {JSON.stringify(state.message)}</Text>
-    </ScrollView>
-  ) : null}
-  <ScrollView horizontal>
-    <Text style={styles.text}>Serial Number: {state.serial}</Text>
-  </ScrollView>
-</View>
+      <View style={styles.avisoContainer}>
+        {dataObtained && (
+          <Text style={styles.avisoText}>{dataObtained}</Text>
+        )}
+      </View>
     </ScrollView>
   );
 };
 
-const { width } = Dimensions.get('window');
-
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    padding: 16,
+    paddingBottom: 32,
   },
   connectButtonContainer: {
-    marginVertical: 20,
-    alignItems: 'center',
+    marginBottom: 16,
   },
   commandsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between', // Adjusted to space-between to ensure two columns
+    marginBottom: 16,
   },
   command: {
-    width: (width / 2) - 20, // Ensure buttons are within screen bounds
-    margin: 5,
-    padding: 10,
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: '#ccc',
-    backgroundColor: '#f9f9f9',
+    marginBottom: 16,
   },
   inputContainer: {
-    flexDirection: 'column', // Ensure inputs are stacked vertically
-    marginVertical: 5,
+    marginTop: 8,
   },
   input: {
     height: 40,
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 5,
-    marginVertical: 5,
-    paddingHorizontal: 10,
+    marginBottom: 8,
+    paddingHorizontal: 8,
   },
-  text: {
-    marginTop: 20,
-    fontSize: 14,
+  avisoContainer: {
+    marginTop: 16,
+  },
+  avisoText: {
+    fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: '#333',
   },
-  textContainer: {
-    width: width ,
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 20,
+  joystickButtonContainer: {
+    marginTop: 8,
+  },
+  joystickContainer: {
+    marginTop: 8,
+    alignItems: 'center',
   },
 });
 
