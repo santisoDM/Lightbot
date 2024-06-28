@@ -109,7 +109,7 @@ function useBLE(): BluetoothLowEnergyApi {
 
             return allDevices;
             
-          } else return Alert.alert('There arent any devices in the zone');
+          } else return 'There arent any devices in the zone';
         });
       } else {
         Alert.alert(
