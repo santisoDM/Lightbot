@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { PermissionsAndroid, Platform } from "react-native";
+import { PermissionsAndroid, Platform, Alert } from "react-native";
 import { BleManager, Device, State } from "react-native-ble-plx";
 import * as ExpoDevice from "expo-device";
 
@@ -81,30 +81,43 @@ function useBLE(): BluetoothLowEnergyApi {
     bleManager.onStateChange((state) => {
       if (state === State.PoweredOn) {
         bleManager.startDeviceScan(null, null, (error, device) => {
-        
           if (error) {
-            console.log('Error durante el escaneo:', error.errorCode, error.message);
+            console.log(
+              "Error durante el escaneo:",
+              error.errorCode,
+              error.message
+            );
             return;
           }
 
           if (device) {
-           alert("Dispositivo conectado. Este es el serviceUUIDsr: " + device.serviceUUIDs);
-            bleManager.stopDeviceScan();
+            alert(
+              "Dispositivo conectado. Este es el serviceUUIDs: " +
+                device.serviceUUIDs
+            );
+
             setAllDevices((prevState: Device[]) => {
               if (!isDuplicatedDevice(prevState, device)) {
+                console.log('theres no duplicates')
                 return [...prevState, device];
               }
+              console.log('Theres a duplicate, so have this')
               return prevState;
             });
 
-           
-          }
+            if (allDevices?.length >= 2)  bleManager.stopDeviceScan();
+
+            return allDevices;
+            
+          } else return Alert.alert('There arent any devices in the zone');
         });
       } else {
-        console.log('El estado del BLE no está encendido:', state);
+        Alert.alert(
+          "El Bluetooth debe estar encendido para funcionar con esta aplicación."
+        );
+        console.log("El estado del BLE no está encendido:", state);
       }
     }, true);
- 
   };
 
   const isDuplicatedDevice = (devices: Device[], nextDevice: Device) =>
