@@ -10,7 +10,8 @@ const stopScene = (serialNumber) => {
     throw new Error('Invalid parameters for stopScene');
   }
   paquete = `${serialNumber},STOP,\\r\\n`;
-  enviarComando(paquete);
+   // enviarComando(paquete);
+   console.log(paquete)
   return paquete;
 };
 

@@ -10,7 +10,8 @@ const savePage = (serialNumber, pageNumber, delay) => {
     throw new Error('Invalid parameters for savePage');
   }
   paquete = `${serialNumber},SAVEpage,${pageNumber},${delay}\\r\\n`;
-  enviarComando(paquete);
+   // enviarComando(paquete);
+   console.log(paquete)
   return paquete;
 };
 
