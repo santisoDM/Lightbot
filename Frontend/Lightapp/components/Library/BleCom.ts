@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Alert, PermissionsAndroid, Platform } from "react-native";
+import { PermissionsAndroid, Platform, Alert } from "react-native";
 import { BleManager, Device, State, Service } from "react-native-ble-plx";
 import * as ExpoDevice from "expo-device";
 
@@ -82,7 +82,7 @@ function useBLE(): BluetoothLowEnergyApi {
 
     bleManager.onStateChange((state) => {
       if (state === State.PoweredOn) {
-        bleManager.startDeviceScan(null, null, async(error, device) => {
+        bleManager.startDeviceScan(null, null, (error, device) => {
           if (error) {
             console.log(
               "Error durante el escaneo:",
@@ -97,21 +97,26 @@ function useBLE(): BluetoothLowEnergyApi {
               "Dispositivo conectado. Este es el serviceUUIDs: " +
                 device.serviceUUIDs
             );
+
             setAllDevices((prevState: Device[]) => {
               if (!isDuplicatedDevice(prevState, device)) {
-                console.log('Theres no duplicates')
+                console.log('theres no duplicates')
                 return [...prevState, device];
               }
-              console.log('There was a duplicate');
+              console.log('Theres a duplicate, so have this')
               return prevState;
             });
 
-            if(allDevices.length>=2) bleManager.stopDeviceScan();
-            return allDevices;
+            if (allDevices?.length >= 2)  bleManager.stopDeviceScan();
 
-          } else alert('Im sorry, theres no device in the scanning process: The device ' + device + ' and the possible error: '+ error);
+            return allDevices;
+            
+          } else return 'There arent any devices in the zone';
         });
       } else {
+        Alert.alert(
+          "El Bluetooth debe estar encendido para funcionar con esta aplicación."
+        );
         console.log("El estado del BLE no está encendido:", state);
       }
     }, true);

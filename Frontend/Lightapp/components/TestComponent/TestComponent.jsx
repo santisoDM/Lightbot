@@ -1,5 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { View, Button, StyleSheet, ScrollView, TextInput, Text } from 'react-native';
+import React, { useEffect, useState, useRef } from "react";
+import {
+  View,
+  Button,
+  StyleSheet,
+  ScrollView,
+  TextInput,
+  Text,
+} from "react-native";
 
 import Commands from "@/constants/Commands";
 
@@ -24,11 +31,17 @@ import setDelay from "../Library/Scene and positions commands/Set Delay/setDelay
 import runPositions from "../Library/Scene and positions commands/Run Positions/runPositions";
 import useBle from "../Library/BleCom";
 
-import Joystick from "@/components/Library/Joystick/joystickController"
+import Joystick from "@/components/Library/Joystick/joystickController";
 
-const TestComponent = ({ state, getMinibotData, getSerialNumber, dataObtained }) => {
+const TestComponent = ({
+  state,
+  getMinibotData,
+  getSerialNumber,
+  dataObtained,
+}) => {
   const [aviso, setAviso] = useState(null);
-  const [alerta, setAlerta] = useState(null);
+  //const [alerta, setAlerta] = useState(null);
+  const [bleInfo, setBleInfo] = useState([]);
   const [inputs, setInputs] = useState({
     SSID: "WiFi_Fibertel_jru_2.4GHz",
     PASS: "xnr4mjdcxr",
@@ -65,15 +78,16 @@ const TestComponent = ({ state, getMinibotData, getSerialNumber, dataObtained })
   const [isJoystickVisible, setJoystickVisible] = useState(false);
 
   //Para lo de Ble
-  const {
-    scanForPeripherals, requestPermissions 
-  } = useBle();
+  const { scanForPeripherals, requestPermissions } = useBle();
 
   const scanDevicesXD = async () => {
     const isAllowed = await requestPermissions();
 
     if (isAllowed) {
-      setAlerta(scanForPeripherals());
+      const answer = scanForPeripherals();
+      answer
+        ? setBleInfo([...answer])
+        : setBleInfo("No hubo respuesta aparente");
     }
   };
 
@@ -162,7 +176,7 @@ const TestComponent = ({ state, getMinibotData, getSerialNumber, dataObtained })
       case "MYIP":
         setAviso(queryMyIP(state.serial));
         break;
-      case 'STOPSCENE':
+      case "STOPSCENE":
         setAviso(stopScene(state.serial));
         break;
       default:
@@ -193,7 +207,8 @@ const TestComponent = ({ state, getMinibotData, getSerialNumber, dataObtained })
           bleInfo.map((devices) => (
             <View>
               <Text>
-                Device Name: {devices?.name ? devices?.name : devices?.localName}
+                Device Name:{" "}
+                {devices?.name ? devices?.name : devices?.localName}
               </Text>
               <Text>Device ID: {devices?.id}</Text>
               <Text>Device Connected State: {devices?.isConnected}</Text>
@@ -381,9 +396,19 @@ const TestComponent = ({ state, getMinibotData, getSerialNumber, dataObtained })
                 />
               </View>
             )}
-            {(cmd.command === 'RUNPOS' || cmd.command === 'INCDEC') && (
+            {(cmd.command === "RUNPOS" || cmd.command === "INCDEC") && (
               <View style={styles.joystickButtonContainer}>
-             { isJoystickVisible ?   <Button title="Esconder Joystick" onPress={() => setJoystickVisible(!isJoystickVisible)} /> :  <Button title="Mostrar Joystick" onPress={() => setJoystickVisible(!isJoystickVisible)} />  }
+                {isJoystickVisible ? (
+                  <Button
+                    title="Esconder Joystick"
+                    onPress={() => setJoystickVisible(!isJoystickVisible)}
+                  />
+                ) : (
+                  <Button
+                    title="Mostrar Joystick"
+                    onPress={() => setJoystickVisible(!isJoystickVisible)}
+                  />
+                )}
                 {isJoystickVisible && (
                   <View style={styles.joystickContainer}>
                     <Joystick onMove={(event) => console.log(event)} />
@@ -395,9 +420,7 @@ const TestComponent = ({ state, getMinibotData, getSerialNumber, dataObtained })
         ))}
       </View>
       <View style={styles.avisoContainer}>
-        {dataObtained && (
-          <Text style={styles.avisoText}>{dataObtained}</Text>
-        )}
+        {dataObtained && <Text style={styles.avisoText}>{dataObtained}</Text>}
       </View>
     </ScrollView>
   );
@@ -432,15 +455,15 @@ const styles = StyleSheet.create({
   },
   avisoText: {
     fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
   },
   joystickButtonContainer: {
     marginTop: 8,
   },
   joystickContainer: {
     marginTop: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
 });
 
