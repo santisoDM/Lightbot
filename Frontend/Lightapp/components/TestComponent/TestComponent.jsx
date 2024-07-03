@@ -420,6 +420,7 @@ const TestComponent = ({
         ))}
       </View>
       <View style={styles.avisoContainer}>
+        {console.log(dataObtained)}
         {dataObtained && <Text style={styles.avisoText}>{dataObtained}</Text>}
       </View>
     </ScrollView>
