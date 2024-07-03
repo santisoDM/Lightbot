@@ -93,11 +93,6 @@ function useBLE(): BluetoothLowEnergyApi {
           }
 
           if (device) {
-            alert(
-              "Dispositivo conectado. Este es el serviceUUIDs: " +
-                device.serviceUUIDs
-            );
-
             setAllDevices((prevState: Device[]) => {
               if (!isDuplicatedDevice(prevState, device)) {
                 console.log('theres no duplicates')
@@ -107,9 +102,13 @@ function useBLE(): BluetoothLowEnergyApi {
               return prevState;
             });
 
-            if (allDevices?.length >= 2)  bleManager.stopDeviceScan();
+            alert(
+              "Dispositivo conectado. Este es el serviceUUIDs: " +
+                device.serviceUUIDs + ' y el nombre del dispositivo es: ' + device.localName
+            );
+            alert(`There are ${allDevices.length} devices scanned and saved locally`);
 
-            return allDevices;
+            if (allDevices?.length >= 2)  bleManager.stopDeviceScan();
             
           } else return 'There arent any devices in the zone';
         });
@@ -120,6 +119,7 @@ function useBLE(): BluetoothLowEnergyApi {
         console.log("El estado del BLE no está encendido:", state);
       }
     }, true);
+    return allDevices;
   };
 
   const isDuplicatedDevice = (devices: Device[], nextDevice: Device) =>
