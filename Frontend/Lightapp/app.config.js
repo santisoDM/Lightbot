@@ -4,7 +4,7 @@ export default ({ config }) => {
       ...config,
       name: "Lightapp",
       slug: "Lightapp",
-      version: "1.0.0",
+      version: "1.1.0",
       orientation: "portrait",
       icon: "./assets/images/icon.png",
       scheme: "myapp",
@@ -17,7 +17,7 @@ export default ({ config }) => {
       updates:{
         url: "https://u.expo.dev/aeb1e1d3-4c2d-4485-af21-315e3dd020bb",
       },
-      runtimeVersion:{policy: "34.0.0"},
+      runtimeVersion:{policy: "appVersion"},
       ios: {
         supportsTablet: true,
         infoPlist: {
@@ -42,7 +42,8 @@ export default ({ config }) => {
           "android.permission.ACCESS_COARSE_LOCATION"
         ],
         package: "com.anonymous.Lightapp",
-        minSdkVersion: 21
+        minSdkVersion: 21,
+        versionCode: 1
       },
       web: {
         bundler: "metro",
