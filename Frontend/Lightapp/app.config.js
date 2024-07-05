@@ -1,4 +1,3 @@
-import { runtimeVersion } from "expo-updates";
 
 export default ({ config }) => {
     return {
