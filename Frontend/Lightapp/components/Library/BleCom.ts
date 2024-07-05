@@ -10,7 +10,6 @@ interface BluetoothLowEnergyApi {
   disconnectFromDevice: () => void;
   connectedDevice: Device | null;
   allDevices: Device[];
-  bleServices: Service[];
 }
 
 function useBLE(): BluetoothLowEnergyApi {
@@ -18,8 +17,6 @@ function useBLE(): BluetoothLowEnergyApi {
 
   const [allDevices, setAllDevices] = useState<Device[]>([]);
   const [connectedDevice, setConnectedDevice] = useState<Device | null>(null);
-  const [bleServices, setBleServices] = useState<Service[]>([]);
-  console.log('Estos son los serivicios hallados, veamos su estructura... ' + bleServices)
   const requestAndroid31Permissions = async () => {
     const bluetoothScanPermission = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
@@ -93,10 +90,6 @@ function useBLE(): BluetoothLowEnergyApi {
           }
 
           if (device) {
-            alert(
-              "Dispositivo conectado. Este es el serviceUUIDs: " +
-                device.serviceUUIDs
-            );
 
             setAllDevices((prevState: Device[]) => {
               if (!isDuplicatedDevice(prevState, device)) {
@@ -106,10 +99,11 @@ function useBLE(): BluetoothLowEnergyApi {
               console.log('Theres a duplicate, so have this')
               return prevState;
             });
-
+            alert(
+              `Dispositivo conectado. Este es el serviceUUIDs:
+                ${device.serviceUUIDs} The Name is: ${device.name}, The Localname is: ${device.localName}, The id from the device is: ${device.id}, and the current saved number of devices is: ${allDevices.length}`
+            );
             if (allDevices?.length >= 2)  bleManager.stopDeviceScan();
-
-            return allDevices;
             
           } else return 'There arent any devices in the zone';
         });
@@ -120,6 +114,7 @@ function useBLE(): BluetoothLowEnergyApi {
         console.log("El estado del BLE no está encendido:", state);
       }
     }, true);
+    return allDevices;
   };
 
   const isDuplicatedDevice = (devices: Device[], nextDevice: Device) =>
@@ -156,7 +151,6 @@ function useBLE(): BluetoothLowEnergyApi {
     allDevices,
     connectedDevice,
     disconnectFromDevice,
-    bleServices,
   };
 }
 

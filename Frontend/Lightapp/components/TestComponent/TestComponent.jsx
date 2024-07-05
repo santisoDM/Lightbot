@@ -37,7 +37,6 @@ const TestComponent = ({
   state,
   getMinibotData,
   getSerialNumber,
-  dataObtained,
 }) => {
   const [aviso, setAviso] = useState(null);
   //const [alerta, setAlerta] = useState(null);
@@ -419,9 +418,7 @@ const TestComponent = ({
           </View>
         ))}
       </View>
-      <View style={styles.avisoContainer}>
-        {dataObtained && <Text style={styles.avisoText}>{dataObtained}</Text>}
-      </View>
+     
     </ScrollView>
   );
 };
