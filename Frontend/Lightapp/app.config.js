@@ -17,6 +17,7 @@ export default ({ config }) => {
       updates:{
         url: "https://u.expo.dev/aeb1e1d3-4c2d-4485-af21-315e3dd020bb",
       },
+      runtimeVersion:{policy: "sdkVersion"},
       ios: {
         supportsTablet: true,
         infoPlist: {
