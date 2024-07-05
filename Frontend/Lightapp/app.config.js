@@ -1,3 +1,5 @@
+import { runtimeVersion } from "expo-updates";
+
 export default ({ config }) => {
     return {
       ...config,
@@ -12,6 +14,9 @@ export default ({ config }) => {
         image: "./assets/images/splash.png",
         resizeMode: "contain",
         backgroundColor: "#ffffff"
+      },
+      updates:{
+        url: "https://u.expo.dev/aeb1e1d3-4c2d-4485-af21-315e3dd020bb",
       },
       ios: {
         supportsTablet: true,

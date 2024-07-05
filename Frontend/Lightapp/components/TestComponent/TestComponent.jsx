@@ -191,6 +191,7 @@ const TestComponent = ({
   useEffect(() => {
     if (aviso) {
       console.log("esto es lo que se manda: " + aviso);
+      alert('Componente montadon')
       getMinibotData(aviso);
     }
   }, [aviso]);
