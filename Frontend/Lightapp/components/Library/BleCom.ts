@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Alert, PermissionsAndroid, Platform } from "react-native";
-import { BleManager, Device, State, Service } from "react-native-ble-plx";
+import { PermissionsAndroid, Platform, Alert } from "react-native";
+import { BleManager, Device, State } from "react-native-ble-plx";
 import * as ExpoDevice from "expo-device";
 
 interface BluetoothLowEnergyApi {
@@ -92,36 +92,31 @@ function useBLE(): BluetoothLowEnergyApi {
             return;
           }
 
-          if (device && allDevices.length >= 2) {
+          if (device) {
             alert(
-              "Dispositivo conectado. Este es el serviceUUIDsr: " +
+              "Dispositivo conectado. Este es el serviceUUIDs: " +
                 device.serviceUUIDs
             );
-            bleManager.stopDeviceScan();
+
             setAllDevices((prevState: Device[]) => {
               if (!isDuplicatedDevice(prevState, device)) {
+                console.log('theres no duplicates')
                 return [...prevState, device];
               }
+              console.log('Theres a duplicate, so have this')
               return prevState;
             });
-            device
-              .connect()
-              .then((device) => device.discoverAllServicesAndCharacteristics())
-              .then((device) => {
-                return device.services();
-              })
-              .then((services) =>{
-                setBleServices((prev: Service[]) => [...prev, ...services])
-                alert('Look at this: ' + bleServices);
-              }
-              )
-              .catch(
-                (error) =>
-                  `Error en servicios y características: ${error.message}`
-              );
-          } else return [...allDevices];
+
+            if (allDevices?.length >= 2)  bleManager.stopDeviceScan();
+
+            return allDevices;
+            
+          } else return 'There arent any devices in the zone';
         });
       } else {
+        Alert.alert(
+          "El Bluetooth debe estar encendido para funcionar con esta aplicación."
+        );
         console.log("El estado del BLE no está encendido:", state);
       }
     }, true);

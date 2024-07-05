@@ -46,6 +46,7 @@ export default ({ config }) => {
       },
       plugins: [
         "expo-router",
+        "expo-sensors",
         [
           "react-native-permissions",
           {
@@ -92,7 +93,7 @@ export default ({ config }) => {
           origin: false
         },
         eas: {
-          projectId: "756260ad-df74-451e-8756-1ada8e103ed2"
+          projectId: "aeb1e1d3-4c2d-4485-af21-315e3dd020bb"
         }
       }
     };
