@@ -89,21 +89,17 @@ function useBLE(): BluetoothLowEnergyApi {
             return;
           }
 
-          if (device) {
+          if (device?.name?.toLowerCase().includes('minibot')) {
+            bleManager.stopDeviceScan();
 
             setAllDevices((prevState: Device[]) => {
               if (!isDuplicatedDevice(prevState, device)) {
-                console.log('theres no duplicates')
+                console.log('theres no duplicates') 
                 return [...prevState, device];
               }
               console.log('Theres a duplicate, so have this')
               return prevState;
             });
-            alert(
-              `Dispositivo conectado. Este es el serviceUUIDs:
-                ${device.serviceUUIDs} The Name is: ${device.name}, The Localname is: ${device.localName}, The id from the device is: ${device.id}, and the current saved number of devices is: ${allDevices.length}`
-            );
-            if (allDevices?.length >= 2)  bleManager.stopDeviceScan();
             
           } else return 'There arent any devices in the zone';
         });
