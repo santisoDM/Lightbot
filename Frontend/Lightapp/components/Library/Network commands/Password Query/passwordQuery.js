@@ -7,10 +7,11 @@ let paquete;
   if (!validateSerialNumber(serialNumber)) {
     throw new Error('Invalid serialNumber');
   }
-  paquete = `${serialNumber},PASS?,\r\n`
-  enviarComando(paquete)
+  paquete = `${serialNumber},PASS?,\\r\\n`
+   // enviarComando(paquete)
+   console.log(paquete)
  
-  return `${serialNumber},PASS?,\r\n`;
+  return `${serialNumber},PASS?,\\r\\n`;
 };
 
 

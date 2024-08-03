@@ -16,14 +16,16 @@ const centralController = async (serial, command, information) => {
         if (!validateSerialNumber(serial)) {
           throw new Error("Invalid serialNumber");
         }
-        return `${serial},${command},\r\n`;
+        return `${serial},${command},\\r\\n`;
       }
       case "SSID": {
-        if (!validateSSID(serial, information?.ssid)) {
-          console.log(information)
+       
+        console.log("Este es: " + information)
+        if (!validateSSID(serial, information)) {
+         
           throw new Error("Invalid serialNumber or ssid");
         }
-        return `${serial},${command},${information.ssid},\\r\\n`;
+        return `${serial},${command},${information},\\r\\n`;
       }
       case "WIFIRESET": {
         if (!validateResetWifi(serial)) {
@@ -32,10 +34,10 @@ const centralController = async (serial, command, information) => {
         return `${serial},${command},\\r\\n`;
       }
       case "PASS": {
-        if (!validatePassword(serial, information?.password)) {
+        if (!validatePassword(serial, information)) {
           throw new Error("Invalid serialNumber or password");
         }
-        return `${serial},${command},${information.password},\\r\\n`;
+        return `${serial},${command},${information},\\r\\n`;
       }
       case "PASS?": {
         let paquete;
@@ -45,10 +47,14 @@ const centralController = async (serial, command, information) => {
         paquete = `${serial},${command},\r\n`;
         return `${serial},${command},\r\n`;
       }
+      // default: {
+      //   console.log('we are here, and the command is: ' + command)
+      //   if(!validateTurnBluetoothOff(serial)) throw new Error('Invalid serialNumber');
+      //   return `${serial},${command}, \r\n`
+      // }
       default: {
-        console.log('we are here, and the command is: ' + command)
-        if(!validateTurnBluetoothOff(serial)) throw new Error('Invalid serialNumber');
-        return `${serial},${command}, \r\n`
+       
+        return `${serial},${command},${information}\r\n`
       }
     }
   } catch (err) {

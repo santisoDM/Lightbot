@@ -10,7 +10,8 @@ const setSpeed = (serialNumber, speed) => {
     throw new Error('Invalid parameters for setSpeed');
   }
   paquete = `${serialNumber},SETspeed,${speed},\\r\\n`;
-  enviarComando(paquete);
+   // enviarComando(paquete);
+   console.log(paquete)
   return paquete;
 };
 

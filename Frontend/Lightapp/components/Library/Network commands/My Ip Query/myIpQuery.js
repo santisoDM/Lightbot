@@ -7,7 +7,8 @@ const queryMyIP = (serialNumber) => {
     throw new Error('Invalid parameters for queryMyIP');
   } 
   paquete = `${serialNumber},MYIP?,\r\n`
-  enviarComando(paquete)
+   // enviarComando(paquete)
+   console.log(paquete)
   return `${serialNumber},MYIP?,\\r\\n`;
 };
 

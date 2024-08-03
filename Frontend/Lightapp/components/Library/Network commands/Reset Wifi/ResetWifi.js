@@ -7,7 +7,8 @@ const resetWifi = (serialNumber) => {
     throw new Error('Invalid parameters for resetWifi');
   }  
   paquete = `${serialNumber},WIFIRESET,\r\n`
-  enviarComando(paquete)
+   // enviarComando(paquete)
+   console.log(paquete)
   return `${serialNumber},WIFIRESET,\\r\\n`;
 };
 
