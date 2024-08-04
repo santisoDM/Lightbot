@@ -3,9 +3,20 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
+const admin = require('firebase-admin');
+const serviceAccount = require('./config/firebaseConfig.json');
 //require('./db.js');
 const updHan = require('../Backend/udpStuff/updHandler')
 const server = express();
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://your-project-id.firebaseio.com"
+});
+
+const db = admin.firestore();
+
+server.use(express.json())
 
 server.name = 'API';
 server.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
